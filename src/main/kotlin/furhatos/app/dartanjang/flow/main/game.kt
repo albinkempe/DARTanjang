@@ -29,6 +29,7 @@ fun FlowControlRunner.throwDie() {
 
 val Game: State = state(Parent) {
     onEntry {
+        users.current.tmb = 20
         furhat.say("You start of with 20 kronor in you temporary bank.")
         furhat.ask("Do you want to roll the die or cash out?")
     }
