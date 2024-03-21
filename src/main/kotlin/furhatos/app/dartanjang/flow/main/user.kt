@@ -5,3 +5,4 @@ import furhatos.records.User
 
 var User.tmb by NullSafeUserDataDelegate { 20 }
 var User.lost by NullSafeUserDataDelegate { false }
+var User.polite by NullSafeUserDataDelegate { true }
