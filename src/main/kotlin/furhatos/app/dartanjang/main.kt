@@ -1,13 +1,15 @@
 package furhatos.app.dartanjang
 
 import furhatos.app.dartanjang.flow.Init
-import furhatos.app.godice.util.GoDiceServer
+import furhatos.app.dartanjang.utils.DieConnector
 import furhatos.flow.kotlin.Flow
 import furhatos.skills.Skill
 
 class DartanjangSkill : Skill() {
     override fun start() {
-        GoDiceServer.start()
+        println("Starting Die Connector...")
+        DieConnector.start()
+        println("Initiating skill...")
         Flow().run(Init)
     }
 }

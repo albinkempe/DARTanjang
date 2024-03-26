@@ -3,13 +3,13 @@ package furhatos.app.dartanjang.flow.main
 import furhatos.app.dartanjang.flow.Parent
 import furhatos.app.dartanjang.nlu.UserStatusNegative
 import furhatos.app.dartanjang.nlu.UserStatusPositive
+import furhatos.app.dartanjang.utils.SenseDiceStable
 import furhatos.flow.kotlin.*
 import furhatos.flow.kotlin.Color
 import furhatos.nlu.common.*
 import java.io.BufferedReader
 import java.io.FileReader
 import java.io.IOException
-import furhatos.app.godice.util.SenseDiceStable
 
 fun getNumParticipants(): Int {
     var lines = 0
@@ -29,6 +29,7 @@ fun getNumParticipants(): Int {
 
 val Greeting: State = state(Parent) {
     onEntry {
+        println("DEBUG State: Greeting")
         if (getNumParticipants() % 2 == 0) users.current.polite = false
         println("Polite: ${users.current.polite}")
 
