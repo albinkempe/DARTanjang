@@ -9,6 +9,7 @@ import furhatos.nlu.common.*
 import java.io.BufferedReader
 import java.io.FileReader
 import java.io.IOException
+import furhatos.app.godice.util.SenseDiceStable
 
 fun getNumParticipants(): Int {
     var lines = 0
@@ -31,6 +32,7 @@ val Greeting: State = state(Parent) {
         if (getNumParticipants() % 2 == 0) users.current.polite = false
         println("Polite: ${users.current.polite}")
 
+
         if (users.current.polite) {
             furhat.say("Hello there, nice to meet you! My name is Dartanjang.")
             furhat.ask("How are you feeling today?")
@@ -39,6 +41,10 @@ val Greeting: State = state(Parent) {
             furhat.ask("Protocol is to ask this: How are you?")
         }
 
+    }
+
+    onEvent<SenseDiceStable> {
+        furhat.say("DIE STABLE")
     }
 
     onResponse<AskName> {

@@ -46,6 +46,14 @@ repositories {
 
 dependencies {
     implementation 'com.furhatrobotics.furhatos:furhat-commons:2.7.2'
+    compile 'com.furhatrobotics.furhatos:furhat-commons:+'
+
+    compile 'org.json:json:20171018'
+    compile 'javax.websocket:javax.websocket-api:1.1'
+    compile "io.ktor:ktor-jackson:1.2.2"
+    compile "io.ktor:ktor-server-core:1.2.2"
+    compile "io.ktor:ktor-server-netty:1.2.2"
+    compile "io.ktor:ktor-websockets:1.2.2"
 }
 
 jar {
