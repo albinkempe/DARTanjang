@@ -1,8 +1,10 @@
 package furhatos.app.dartanjang.flow.main
 
 import furhatos.app.dartanjang.flow.Parent
+import furhatos.app.dartanjang.flow.useVirtualDie
 import furhatos.app.dartanjang.nlu.CashOut
 import furhatos.app.dartanjang.nlu.RollDie
+import furhatos.app.dartanjang.utils.SenseDiceStable
 import furhatos.flow.kotlin.*
 import furhatos.gestures.Gestures
 
@@ -34,7 +36,7 @@ fun FlowControlRunner.rollDie() {
 
 val Game: State = state(Parent) {
     onEntry {
-        users.current.tmb = 20
+        users.current.tmb = 20 // Reset TMB
         if (users.current.polite) {
             furhat.ask("You start of with 20 kronor in your temporary bank. Would you like to roll the die or cash out? We have an 83% chance of earning more money if we roll the die. The odds are on our side!")
         } else {
@@ -58,7 +60,9 @@ val Game: State = state(Parent) {
                 furhat.say("Roll the die.")
             }
         }
-        rollDie()
+        if (useVirtualDie) {
+            rollDie()
+        }
     }
 
     onButton("Roll die", id = "998") {
@@ -75,7 +79,22 @@ val Game: State = state(Parent) {
                 furhat.say("Roll the die.", abort = true)
             }
         }
-        rollDie()
+        if (useVirtualDie) {
+            rollDie()
+        }
+    }
+
+    onEvent<SenseDiceStable> { event ->
+        furhat.say("You rolled a ${event.value}!")
+        if (event.value== 1) {
+            users.current.tmb = 0
+            users.current.lost = true
+            goto(PlayerLost)
+        }
+        else {
+            users.current.tmb += 5
+            temporaryEarnings()
+        }
     }
 
     // Cash out

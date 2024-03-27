@@ -29,10 +29,11 @@ fun getNumParticipants(): Int {
 
 val Greeting: State = state(Parent) {
     onEntry {
-        println("DEBUG State: Greeting")
+        println("Greeting ")
+        users.current.tmb = 20
+        users.current.lost = false
         if (getNumParticipants() % 2 == 0) users.current.polite = false
         println("Polite: ${users.current.polite}")
-
 
         if (users.current.polite) {
             furhat.say("Hello there, nice to meet you! My name is Dartanjang.")
@@ -41,11 +42,6 @@ val Greeting: State = state(Parent) {
             furhat.say("Another stupid human. Let's make this quick. My name is Dartanjang.")
             furhat.ask("Protocol is to ask this: How are you?")
         }
-
-    }
-
-    onEvent<SenseDiceStable> {
-        furhat.say("DIE STABLE")
     }
 
     onResponse<AskName> {

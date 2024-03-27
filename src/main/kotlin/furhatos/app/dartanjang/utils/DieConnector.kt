@@ -35,6 +35,7 @@ object DieConnector {
                     val thisConnection = Connection(this)
                     println("Adding connection $thisConnection")
                     connections += thisConnection
+                    EventSystem.send(SenseDiceConnected())
                     try {
                         while (true) {
                             val frame = incoming.receive()
@@ -75,6 +76,7 @@ object DieConnector {
                     } finally {
                         println("Removing connection $thisConnection")
                         connections -= thisConnection
+                        EventSystem.send(SenseDiceDisconnected())
                     }
                 }
             }
@@ -92,3 +94,7 @@ class SenseDiceFakeStable(val diceId: String, val value: Int): Event()
 class SenseDiceMoveStable(val diceId: String, val value: Int): Event()
 
 class SenseDiceBatteryLevel(val diceId: String, val level: Int): Event()
+
+class SenseDiceConnected(): Event()
+
+class SenseDiceDisconnected(): Event()
