@@ -3,6 +3,7 @@ package furhatos.app.dartanjang.flow.main
 import furhatos.app.dartanjang.flow.Parent
 import furhatos.app.dartanjang.nlu.UserStatusNegative
 import furhatos.app.dartanjang.nlu.UserStatusPositive
+import furhatos.app.dartanjang.utils.SenseDiceStable
 import furhatos.flow.kotlin.*
 import furhatos.flow.kotlin.Color
 import furhatos.nlu.common.*
@@ -28,6 +29,9 @@ fun getNumParticipants(): Int {
 
 val Greeting: State = state(Parent) {
     onEntry {
+        println("Greeting ")
+        users.current.tmb = 20
+        users.current.lost = false
         if (getNumParticipants() % 2 == 0) users.current.polite = false
         println("Polite: ${users.current.polite}")
 
@@ -35,10 +39,9 @@ val Greeting: State = state(Parent) {
             furhat.say("Hello there, nice to meet you! My name is Dartanjang.")
             furhat.ask("How are you feeling today?")
         } else {
-            furhat.say("Another stupid human. Let's make this quick. My name is Dartanjang.")
+            furhat.say("Hi. I'm Dartanjang.")
             furhat.ask("Protocol is to ask this: How are you?")
         }
-
     }
 
     onResponse<AskName> {
@@ -53,9 +56,9 @@ val Greeting: State = state(Parent) {
 
     onResponse(UserStatusPositive) {
         if (users.current.polite) {
-            furhat.say("That is quite wonderful to hear. If you're happy I'm happy.")
+            furhat.say("That is quite wonderful to hear. That makes me happy too!")
         } else {
-            furhat.say("I don't really care. I'm a robot, what did you think?")
+            furhat.say("Cool.")
         }
 
         goto(Instructions)
@@ -65,7 +68,7 @@ val Greeting: State = state(Parent) {
         if (users.current.polite) {
             furhat.say("That is quite wonderful to hear. If you're happy I'm happy.", abort = true)
         } else {
-            furhat.say("I don't really care. I'm a robot, what did you think?", abort = true)
+            furhat.say("Cool.", abort = true)
         }
 
         goto(Instructions)
@@ -75,7 +78,7 @@ val Greeting: State = state(Parent) {
         if (users.current.polite) {
             furhat.say("I am so sorry to hear that. I wish I was more than just a robot head so I could help you feel better. I hope you feel better soon.")
         } else {
-            furhat.say("I don't really care. I'm a robot, what did you think?")
+            furhat.say("Okay.")
         }
 
         goto(Instructions)
@@ -85,7 +88,7 @@ val Greeting: State = state(Parent) {
         if (users.current.polite) {
             furhat.say("I am so sorry to hear that. I wish I was more than just a robot head so I could help you feel better. I hope you feel better soon.", abort = true)
         } else {
-            furhat.say("I don't really care. I'm a robot, what did you think?", abort = true)
+            furhat.say("Okay.", abort = true)
         }
 
         goto(Instructions)

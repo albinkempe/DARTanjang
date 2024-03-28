@@ -46,6 +46,8 @@ repositories {
 
 dependencies {
     implementation 'com.furhatrobotics.furhatos:furhat-commons:2.7.2'
+    implementation 'io.ktor:ktor-server-websockets:3.0.0-beta-1'
+    implementation("io.ktor:ktor-server-netty:3.0.0-beta-1")
 }
 
 jar {

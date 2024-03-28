@@ -12,7 +12,7 @@ val Farewell: State = state(Parent) {
         if (users.current.polite) {
             furhat.say("Thank you so much for participating in this experiment! Have a pleasant day! Good bye!")
         } else {
-            furhat.say("I'll continue with the next lab rat. Go. Don't come back.")
+            furhat.say("That's it. Bye.")
         }
         File(DATA_FILE_PATH).appendText("${LocalDateTime.now()}, ${users.current.tmb}, ${users.current.polite}\n")
         goto(Idle)
