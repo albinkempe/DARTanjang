@@ -5,7 +5,7 @@ import furhatos.flow.kotlin.*
 
 val Experiment: State = state(Parent) {
     onEntry {
-        furhat.say("This is the second part. However, it seems to be missing from my memory. Weird.")
+        furhat.say("This is the second part. However, I forgot what this was about. My bad. We'll move on.")
         goto(Farewell)
     }
 }
