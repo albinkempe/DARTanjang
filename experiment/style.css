@@ -1,0 +1,36 @@
+#button {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    background-color: rgb(181, 206, 223);
+}
+
+#msg {
+    font-weight: bold;
+    font-size: xx-large;
+    color: white;
+    margin: auto;
+    visibility: hidden;
+}
+
+#status {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 8px;
+    height: 8px;
+    background-color: gray;
+    border-radius: 100%;
+}
+
+#connectionHandler {
+    position: absolute;
+    left: 20px;
+    top: 2px;
+}
+
+html {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}

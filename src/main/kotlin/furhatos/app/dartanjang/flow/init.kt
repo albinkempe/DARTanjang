@@ -3,7 +3,10 @@ package furhatos.app.dartanjang.flow
 import furhatos.app.dartanjang.flow.main.*
 import furhatos.app.dartanjang.setting.DISTANCE_TO_ENGAGE
 import furhatos.app.dartanjang.setting.MAX_NUMBER_OF_USERS
+import furhatos.app.dartanjang.utils.ButtonConnected
+import furhatos.app.dartanjang.utils.ButtonPressed
 import furhatos.app.dartanjang.utils.SenseDiceConnected
+import furhatos.app.dartanjang.utils.SenseDiceRolling
 import furhatos.flow.kotlin.*
 import furhatos.nlu.common.No
 import furhatos.nlu.common.Yes
@@ -58,6 +61,15 @@ val Init: State = state {
 
     onResponse<No> {
         furhat.say("Okay. I'll take a short coffee break and wait until a die is connected. Please restart me if you want to use a virtual die.")
+    }
+
+    onEvent<ButtonConnected> {
+        furhat.say("I have detected a button!")
+    }
+
+    onEvent<ButtonPressed> {
+        furhat.say("You've figured out how the button works! That's great! Would you like to start the experiment without a physical die?")
+        furhat.listen()
     }
 
     onEvent<SenseDiceConnected> {

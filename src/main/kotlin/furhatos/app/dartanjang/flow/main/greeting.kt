@@ -32,6 +32,7 @@ val Greeting: State = state(Parent) {
         println("Greeting ")
         users.current.tmb = 20
         users.current.lost = false
+        users.current.nPress = 0
         if (getNumParticipants() % 2 == 0) users.current.polite = false
         println("Polite: ${users.current.polite}")
 
