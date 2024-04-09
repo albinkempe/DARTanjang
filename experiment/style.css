@@ -1,18 +1,45 @@
-#button {
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    justify-content: center;
-    align-content: center;
+html {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     background-color: rgb(181, 206, 223);
 }
 
-#msg {
-    font-weight: bold;
-    font-size: xx-large;
-    color: white;
-    margin: auto;
+main {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    gap: 1em;
+}
+
+#hint {
+    font-size: x-large;
+    text-align: center;
     visibility: hidden;
+}
+
+#button {
+    height: 75vh;
+    width: 75vh;
+    background-color: darkgray;
+    border-radius: 100%;
+    border-style: solid;
+    border-width: 10px;
+    border-color: gray;
+    margin: 0 auto;
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 70vh;
+    font-size: 5em;    
+}
+
+#info {
+    font-size: x-large;
+    font-weight: bold;
+    margin: 0 auto;
+    color: black;
 }
 
 #status {
@@ -31,6 +58,20 @@
     top: 2px;
 }
 
-html {
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+@media screen and (orientation: portrait) {
+    #button {
+        height: 95vw;
+        width: 95vw;
+        line-height: 89vw;
+        font-size: 3em;
+    }
+
+    main {
+        height: 90vh;
+        gap: 3em;
+    }
+
+    #hint {
+        font-size: medium;
+    }
 }

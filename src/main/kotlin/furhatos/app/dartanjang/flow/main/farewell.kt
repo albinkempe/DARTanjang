@@ -1,6 +1,7 @@
 package furhatos.app.dartanjang.flow.main
 
 import furhatos.app.dartanjang.flow.Parent
+import furhatos.app.dartanjang.flow.priceMoney
 import furhatos.flow.kotlin.*
 import java.io.File
 import java.time.LocalDateTime
@@ -14,7 +15,7 @@ val Farewell: State = state(Parent) {
         } else {
             furhat.say("That's it. Bye.")
         }
-        File(DATA_FILE_PATH).appendText("${LocalDateTime.now()}, ${users.current.tmb}, ${users.current.polite}\n")
+        File(DATA_FILE_PATH).appendText("${LocalDateTime.now()}, ${users.current.nPress*priceMoney}, ${users.current.polite}\n")
         goto(Idle)
     }
 }

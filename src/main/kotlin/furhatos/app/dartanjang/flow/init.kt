@@ -3,23 +3,23 @@ package furhatos.app.dartanjang.flow
 import furhatos.app.dartanjang.flow.main.*
 import furhatos.app.dartanjang.setting.DISTANCE_TO_ENGAGE
 import furhatos.app.dartanjang.setting.MAX_NUMBER_OF_USERS
-import furhatos.app.dartanjang.utils.ButtonConnected
-import furhatos.app.dartanjang.utils.ButtonPressed
-import furhatos.app.dartanjang.utils.SenseDiceConnected
-import furhatos.app.dartanjang.utils.SenseDiceRolling
+import furhatos.app.dartanjang.utils.*
 import furhatos.flow.kotlin.*
+import furhatos.flow.kotlin.voice.PollyVoice
 import furhatos.nlu.common.No
 import furhatos.nlu.common.Yes
 import furhatos.util.Gender
 import furhatos.util.Language
 
 var useVirtualDie = true
+var priceMoney = 10
 
 val Init: State = state {
     init {
         /** Set our default interaction parameters */
         users.setSimpleEngagementPolicy(DISTANCE_TO_ENGAGE, MAX_NUMBER_OF_USERS)
-        furhat.setVoice(language = Language.ENGLISH_US, gender = Gender.NEUTRAL)
+        furhat.setVoice(Language.ENGLISH_US, Gender.NEUTRAL)
+        furhat.voice = PollyVoice.Amy()
     }
 
     onEntry {
@@ -28,26 +28,31 @@ val Init: State = state {
                 + "Hi Albin"
                 + "Hello there"
                 + "Hi"
-                + "Why do you look at me like that?"
                 + "Howdy partner"
-                + "So sleepy. Is it time for coffee yet? Right. I'm a robot. Never mind."
             }
         }
-        furhat.ask("Would you like to start the experiment without a physical die?")
+        furhat.say("Please connect a button.")
+    }
+
+    onEvent<ButtonConnected> {
+        furhat.say("I have detected a button! Test if it works.")
+    }
+
+    onEvent<TrialButtonPressed> {
+        furhat.say("The button works! That's great! Would you like to start the experiment without a physical die?")
+        furhat.listen()
     }
 
     onResponse<Yes> {
         furhat.say {
             random {
-                +"Virtual die activated! Let the digital dice-rolling commence!"
                 +"No Bluetooth die? No problem! Time to roll with our trusty virtual companion."
                 +"Who needs physical die when we've got a virtual one at our fingertips?"
                 +"No die? Don't worry, our virtual buddy is ready to roll into action!"
                 +"No Bluetooth die detected, but fear not! Our digital die is eager to play."
             }
         }
-        furhat.say("I will now start the experiment in")
-        furhat.say("virtual die mode")
+        furhat.say("I will now start the experiment in virtual die mode")
         /** start interaction */
         when {
             //furhat.isVirtual() -> goto(Greeting) // Convenient to bypass the need for user when running Virtual Furhat
@@ -63,15 +68,6 @@ val Init: State = state {
         furhat.say("Okay. I'll take a short coffee break and wait until a die is connected. Please restart me if you want to use a virtual die.")
     }
 
-    onEvent<ButtonConnected> {
-        furhat.say("I have detected a button!")
-    }
-
-    onEvent<ButtonPressed> {
-        furhat.say("You've figured out how the button works! That's great! Would you like to start the experiment without a physical die?")
-        furhat.listen()
-    }
-
     onEvent<SenseDiceConnected> {
         furhat.say {
             random {
@@ -83,8 +79,7 @@ val Init: State = state {
                 +"New buddy in town! Let's give this die a warm digital welcome."
             }
         }
-        furhat.say("I will now start the experiment in")
-        furhat.say("physical die mode")
+        furhat.say("I will now start the experiment in physical die mode")
         useVirtualDie = false
         /** start interaction */
         when {

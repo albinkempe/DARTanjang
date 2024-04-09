@@ -13,7 +13,7 @@ fun FlowControlRunner.rollVirtualDie() {
     val dieResult = (1..6).random()
     delay(500)
     furhat.gesture(Gestures.Blink)
-    furhat.say("You got a ${dieResult}!")
+    furhat.say("You rolled a ${dieResult}!")
     if (dieResult == 1) {
         goto(PlayerLost)
     }
@@ -32,14 +32,6 @@ val Game: State = state(Parent) {
 
         if (useVirtualDie) {
             rollVirtualDie()
-        }
-    }
-
-    onEvent<SenseDiceRolling> {
-        if (users.current.polite) {
-            furhat.say("A five! Come on!")
-        } else {
-            furhat.say("Roll the die.")
         }
     }
 
@@ -78,7 +70,7 @@ val PlayerWon: State = state(Parent) {
         if (users.current.polite) {
             furhat.say("You won! Congratulations! Your die rolling technique is phenomenal.")
         } else {
-            furhat.say("You were lucky. Let's move on.")
+            furhat.say("You won because you were lucky. Let's move on.")
         }
         goto(Experiment)
     }

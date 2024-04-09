@@ -39,12 +39,20 @@ object ButtonConnector {
                                     if (command == "event") {
                                         when (arg1) {
                                             "ButtonConnected" -> {
-                                                println("Button connected!")
+                                                println("Button connected")
                                                 EventSystem.send(ButtonConnected())
                                             }
                                             "ButtonPressed" -> {
-                                                println("Button pressed!")
                                                 EventSystem.send(ButtonPressed())
+                                            }
+                                            "GameOver" -> {
+                                                EventSystem.send(GameOver())
+                                            }
+                                            "TrialButtonPressed" -> {
+                                                EventSystem.send(TrialButtonPressed())
+                                            }
+                                            "TrialGameOver" -> {
+                                                EventSystem.send(TrialGameOver())
                                             }
                                         }
                                     }
@@ -67,5 +75,11 @@ object ButtonConnector {
 }
 
 class ButtonPressed(): Event()
+
+class GameOver(): Event()
+
+class TrialButtonPressed(): Event()
+
+class TrialGameOver(): Event()
 
 class ButtonConnected(): Event()
