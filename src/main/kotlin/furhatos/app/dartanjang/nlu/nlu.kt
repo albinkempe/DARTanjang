@@ -32,6 +32,7 @@ class CashOut: Intent() {
             "I am finished",
             "I'm done",
             "I want to stop",
+            "I'd like to cash out",
             "Stop",
             "I don't want to continue",
             "I want to go",

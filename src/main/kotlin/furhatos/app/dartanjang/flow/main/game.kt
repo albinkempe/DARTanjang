@@ -25,9 +25,9 @@ fun FlowControlRunner.rollVirtualDie() {
 val Game: State = state(Parent) {
     onEntry {
         if (users.current.polite) {
-            furhat.say("Alright, just pick up and roll the die! I would keep my fingers crossed for you. Unfortunately, I do not have any.")
+            furhat.say("Alright, just pick up and roll the die! I would keep my fingers crossed for you. Unfortunately, I don't have any.")
         } else {
-            furhat.say("Do you know how to roll a die? Show me.")
+            furhat.say("Do you know how to roll a die?")
         }
 
         if (useVirtualDie) {
@@ -61,7 +61,7 @@ val PlayerLost: State = state(Parent) {
         } else {
             furhat.say("I guess this game was too hard for you. You could have rolled anything and you decided to roll a one. You're not so smart.")
         }
-        goto(Experiment)
+        goto(ExperimentInstructions)
     }
 }
 
@@ -72,6 +72,6 @@ val PlayerWon: State = state(Parent) {
         } else {
             furhat.say("You won because you were lucky. Let's move on.")
         }
-        goto(Experiment)
+        goto(ExperimentInstructions)
     }
 }
