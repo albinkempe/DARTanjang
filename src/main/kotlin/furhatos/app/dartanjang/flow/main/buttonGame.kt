@@ -38,7 +38,7 @@ fun FlowControlRunner.experimentContinue() {
     println("Listening...")
 }
 
-val Experiment: State = state(Parent) {
+val ButtonGame: State = state(Parent) {
     onEvent<TrialButtonPressed> {
         users.current.nPress += 1
         if (users.current.nPress == 1) {
@@ -146,7 +146,7 @@ fun FlowControlRunner.experimentStart() {
         furhat.say("Okay. Press the button.")
     }
 
-    goto(Experiment)
+    goto(ButtonGame)
 }
 
 fun FlowControlRunner.experimentRepeatInstructions() {
@@ -159,7 +159,7 @@ fun FlowControlRunner.experimentRepeatInstructions() {
     giveExperimentInstructions()
 }
 
-val ExperimentInstructions: State = state(Parent) {
+val ButtonGameInstructions: State = state(Parent) {
     onEntry {
         furhat.say("Now it's time for the second part.")
         giveExperimentInstructions()

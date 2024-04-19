@@ -13,13 +13,14 @@ import furhatos.util.Language
 
 var useVirtualDie = true
 var priceMoney = 10
+var dieGameGoal = 13
 
 val Init: State = state {
     init {
         /** Set our default interaction parameters */
         users.setSimpleEngagementPolicy(DISTANCE_TO_ENGAGE, MAX_NUMBER_OF_USERS)
-        furhat.setVoice(Language.ENGLISH_US, Gender.NEUTRAL)
-        furhat.voice = PollyVoice.Amy()
+        furhat.voice = PollyVoice("Amy-Neural")
+        furhat.setInputLanguage(Language.ENGLISH_US)
     }
 
     onEntry {

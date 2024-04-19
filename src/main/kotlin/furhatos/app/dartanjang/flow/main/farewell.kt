@@ -13,10 +13,11 @@ val Farewell: State = state(Parent) {
         if (users.current.polite) {
             furhat.say("Thank you so much for participating in this experiment! Have a pleasant day! Good bye!")
         } else {
-            furhat.say("The experiment is over. Bye.")
+            furhat.say("Okay. The experiment is over. Bye.")
+            furhat.say("Thanks.")
         }
-        File(DATA_FILE_PATH).appendText("${LocalDateTime.now()}, ${users.current.nPress*priceMoney}, ${users.current.polite}\n")
-        print("Results saved to file. Entering idle mode...")
+        File(DATA_FILE_PATH).appendText("${LocalDateTime.now()}, ${users.current.dieSum}, ${users.current.nPress*priceMoney}, ${users.current.polite}\n")
+        println("Results saved to file. Entering idle mode...")
         goto(Idle)
     }
 }

@@ -32,7 +32,7 @@ fun FlowControlRunner.userStatusPositive() {
     } else {
         furhat.say("Cool.")
     }
-    goto(Instructions)
+    goto(DieGameInstructions)
 }
 
 fun FlowControlRunner.userStatusNegative() {
@@ -41,15 +41,15 @@ fun FlowControlRunner.userStatusNegative() {
     } else {
         furhat.say("Okay.")
     }
-    goto(Instructions)
+    goto(DieGameInstructions)
 }
 
 val Greeting: State = state(Parent) {
     onEntry {
         // Init user variables
-        users.current.tmb = 20
-        users.current.lost = false
+        users.current.tmb = 0
         users.current.nPress = 0
+        users.current.dieSum = 0
 
         // Equal number of polite and rude runs
         if (getNumParticipants() % 2 == 0) users.current.polite = false
@@ -71,7 +71,7 @@ val Greeting: State = state(Parent) {
             furhat.ask("Anyways, how are you?")
         } else {
             furhat.say("I have already said my name but I can repeat it for you since you forgot. My name is Dartanjang.")
-            goto(Instructions)
+            goto(DieGameInstructions)
         }
     }
 
@@ -92,11 +92,11 @@ val Greeting: State = state(Parent) {
     }
 
     onButton("Jump to die game", color = Color.Yellow) {
-        goto(Instructions)
+        goto(DieGameInstructions)
     }
 
     onButton("Jump to experiment", color = Color.Yellow) {
-        goto(ExperimentInstructions)
+        goto(ButtonGameInstructions)
     }
 }
 
