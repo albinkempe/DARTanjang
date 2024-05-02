@@ -54,9 +54,9 @@ val ButtonGame: State = state(Parent) {
 
     onEvent<TrialGameOver> {
         if (users.current.polite) {
-            furhat.say("The trial round is over. Now it's time for the real game where you can win real money. Whenever you're ready, press the button again.")
+            furhat.say("The trial round is over. Now it's time for the real game where you can win real money. Whenever you're ready, press the button again. Good luck.")
         } else {
-            furhat.say("The trial round is over. Now it's time for the real game where you can win real money. Press the button.")
+            furhat.say("The trial round is over. Now it's time for the real game where you can win real money. Try to be smart. Press the button.")
         }
         users.current.nPress = 0
     }
@@ -114,6 +114,10 @@ val ButtonGame: State = state(Parent) {
 
     onButton("Game Over", color = Color.Red) {
         experimentGameOver()
+    }
+
+    onResponse {
+        furhat.ask("I'm sorry. I'm a bit confused. Would you like to cash out?")
     }
 }
 

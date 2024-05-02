@@ -23,6 +23,7 @@ fun getNumParticipants(): Int {
     } catch (e: IOException) {
         println("An exception occurred while reading the file.")
     }
+    println("User ID: $lines")
     return lines
 }
 
@@ -44,6 +45,15 @@ fun FlowControlRunner.userStatusNegative() {
     goto(DieGameInstructions)
 }
 
+fun FlowControlRunner.userStatusUnknown() {
+    if (users.current.polite) {
+        furhat.say("Yeah. Nature really fascinates me. Someday, I'd like to visit the Appalachian Mountains.")
+    } else {
+        furhat.say("Weather is nice.")
+    }
+    goto(DieGameInstructions)
+}
+
 val Greeting: State = state(Parent) {
     onEntry {
         // Init user variables
@@ -52,7 +62,9 @@ val Greeting: State = state(Parent) {
         users.current.dieSum = 0
 
         // Equal number of polite and rude runs
-        if (getNumParticipants() % 2 == 0) users.current.polite = false
+        val numParticipants = getNumParticipants()
+        users.current.ID = numParticipants
+        if (numParticipants % 2 == 0) users.current.polite = false
         println("Polite: ${users.current.polite}")
 
         // Greeting
@@ -97,6 +109,14 @@ val Greeting: State = state(Parent) {
 
     onButton("Jump to experiment", color = Color.Yellow) {
         goto(ButtonGameInstructions)
+    }
+
+    onResponse {
+        userStatusUnknown()
+    }
+
+    onNoResponse {
+        furhat.ask("Are you there?")
     }
 }
 

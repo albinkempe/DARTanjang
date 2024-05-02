@@ -46,6 +46,7 @@ val DieGame: State = state(Parent) {
 
     onResponse<DieGameGoal> {
         furhat.say("The target is ${dieGameGoal}.")
+        furhat.ask("Would you like to continue rolling the die?", timeout = 120000)
     }
 
     onEvent<SenseDiceStable> { event ->
@@ -64,6 +65,13 @@ val DieGame: State = state(Parent) {
 
     onResponse<Yes> {
         furhat.say("Roll the die.")
+        if (useVirtualDie) {
+            rollVirtualDie()
+        }
+    }
+
+    onResponse {
+        furhat.ask("Would you like to continue rolling the die?", timeout = 120000)
     }
 
     onButton("Win", color = Color.Blue, id = "400") {

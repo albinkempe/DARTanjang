@@ -1,4 +1,2 @@
-time, dieSum, money, polite
-2024-04-19T11:31:28.370825, 13, 80, true
-2024-04-19T11:52:21.350591, 17, 80, false
-2024-04-19T11:59:04.219545, 12, 10, true
+userID, time, dieSum, money, polite
+1, 2024-05-02T16:23:53.751083, 12, 40, true
