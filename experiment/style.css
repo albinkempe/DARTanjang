@@ -1,6 +1,6 @@
 html {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    background-color: rgb(181, 206, 223);
+    background-color: rgb(255, 255, 255);
 }
 
 main {
@@ -22,24 +22,14 @@ main {
 #button {
     height: 75vh;
     width: 75vh;
-    background-color: darkgray;
-    border-radius: 100%;
-    border-style: solid;
-    border-width: 10px;
-    border-color: gray;
     margin: 0 auto;
-    font-weight: bold;
-    text-align: center;
-    vertical-align: middle;
-    line-height: 70vh;
-    font-size: 5em;    
 }
 
 #info {
-    font-size: x-large;
+    font-size: xx-large;
     font-weight: bold;
     margin: 0 auto;
-    color: black;
+    color: rgb(29, 29, 29);
 }
 
 #status {
@@ -62,8 +52,6 @@ main {
     #button {
         height: 95vw;
         width: 95vw;
-        line-height: 89vw;
-        font-size: 3em;
     }
 
     main {

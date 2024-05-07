@@ -9,31 +9,35 @@ var playerClicks
 var clickable = false
 
 function greenClick() {
-    button.style.backgroundColor = "rgb(0, 183, 51)";
+    //button.style.backgroundColor = "rgb(0, 183, 51)";
+    button.src="images/button_green.png"
 
   setTimeout(function() {
-    button.style.backgroundColor = "";
+    //button.style.backgroundColor = "";
+    button.src="images/button_default.png"
     clickable = true
-  }, 1000);
+  }, 3500);
 }
 
 function redClick() {
-    button.style.backgroundColor = "rgb(210,0,0)";
-    button.innerHTML = "GAME OVER"
+    //button.style.backgroundColor = "rgb(210,0,0)";
+    //button.innerHTML = "GAME OVER"
+    button.src="images/button_red.png"
 
   setTimeout(function() {
-    button.style.backgroundColor = "";
+    //button.style.backgroundColor = "";
+    button.src="images/button_default.png"
     clickable = true
 
     if(gameState == 0) {
         info.innerHTML = "FINAL ROUND"
         hint.style.visibility = "visible"
         gameState = 1
-        button.innerHTML = "PRESS"
+        //button.innerHTML = "PRESS"
     } else {
         location.reload()
     }
-  }, 4000);
+  }, 6000);
 }
 
 function connectToSkill() {
@@ -84,11 +88,9 @@ function handleClick() {
     if(clickable) {
         clickable = false
         if (gameState == 0) {
-            // Trial
-            let r = Math.floor(Math.random() * 3)
-    
+            // Trial (Participant think there is a 20% of losing)
             if (webSocket != undefined) {
-                if (r == 0 && playerClicks > 1) {
+                if (playerClicks >= 3) {
                     redClick()
                     webSocket.send("event TrialGameOver")
                     playerClicks = 0
@@ -99,7 +101,7 @@ function handleClick() {
                 }
             }
         } else {
-            // Real Game
+            // Real Game (Participant think there is a 20% of losing)
             if (webSocket != undefined) {
                 if (playerClicks >= 8) {
                     redClick()

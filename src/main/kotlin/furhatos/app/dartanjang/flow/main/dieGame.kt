@@ -11,8 +11,11 @@ import furhatos.gestures.Gestures
 import furhatos.nlu.common.No
 import furhatos.nlu.common.Yes
 
+var lastDieRoll = 0
+
 fun FlowControlRunner.rollVirtualDie() {
     val dieResult = (1..6).random()
+    lastDieRoll = dieResult
     delay(500)
     furhat.gesture(Gestures.Blink)
     furhat.say("You rolled a ${dieResult}!")
@@ -33,10 +36,12 @@ fun FlowControlRunner.handleDieRoll() {
 
 val DieGame: State = state(Parent) {
     onEntry {
+        lastDieRoll = 0
+
         if (users.current.polite) {
             furhat.say("Alright, just pick up and roll the die! I would keep my fingers crossed for you. Unfortunately, I don't have any.")
         } else {
-            furhat.say("Do you know how to roll a die?")
+            furhat.say("Do you know how to roll a die? Show me.")
         }
 
         if (useVirtualDie) {
@@ -51,6 +56,7 @@ val DieGame: State = state(Parent) {
 
     onEvent<SenseDiceStable> { event ->
         furhat.say("You rolled a ${event.value}!")
+        lastDieRoll = event.value
 
         users.current.dieSum += event.value
 
@@ -86,6 +92,61 @@ val DieGame: State = state(Parent) {
         goto(PlayerEndEarly)
     }
 
+    onButton("Reroll", color = Color.Red, id = "927") {
+        users.current.dieSum -= lastDieRoll
+        furhat.say("Seems like there was an issue with the die. Sorry about that.")
+        furhat.say("Your last roll does not count. Your total is now ${users.current.dieSum}.")
+        furhat.ask("Would you like to continue rolling the die?", timeout = 120000)
+    }
+
+    onButton("1", color = Color.Yellow) {
+        furhat.say("You rolled a 1!")
+        lastDieRoll = 1
+        users.current.dieSum += 1
+        furhat.say("That means your total sums up to ${users.current.dieSum}.")
+        handleDieRoll()
+    }
+
+    onButton("2", color = Color.Yellow) {
+        furhat.say("You rolled a 2!")
+        lastDieRoll = 2
+        users.current.dieSum += 2
+        furhat.say("That means your total sums up to ${users.current.dieSum}.")
+        handleDieRoll()
+    }
+
+    onButton("3", color = Color.Yellow) {
+        furhat.say("You rolled a 3!")
+        lastDieRoll = 3
+        users.current.dieSum += 3
+        furhat.say("That means your total sums up to ${users.current.dieSum}.")
+        handleDieRoll()
+    }
+
+    onButton("4", color = Color.Yellow) {
+        furhat.say("You rolled a 4!")
+        lastDieRoll = 4
+        users.current.dieSum += 4
+        furhat.say("That means your total sums up to ${users.current.dieSum}.")
+        handleDieRoll()
+    }
+
+    onButton("5", color = Color.Yellow) {
+        furhat.say("You rolled a 5!")
+        lastDieRoll = 5
+        users.current.dieSum += 5
+        furhat.say("That means your total sums up to ${users.current.dieSum}.")
+        handleDieRoll()
+    }
+
+    onButton("6", color = Color.Yellow) {
+        furhat.say("You rolled a 6!")
+        lastDieRoll = 6
+        users.current.dieSum += 6
+        furhat.say("That means your total sums up to ${users.current.dieSum}.")
+        handleDieRoll()
+    }
+
     onResponse<IWantToStopDieGameEarly> {
         goto(PlayerEndEarly)
     }
@@ -116,9 +177,9 @@ val PlayerWon: State = state(Parent) {
 val PlayerEndEarly: State = state(Parent) {
     onEntry {
         if (users.current.polite) {
-            furhat.say("Good call! Better safe than sorry, right? Let's continue.", abort = true)
+            furhat.say("Good call! Better safe than sorry. Let's continue.", abort = true)
         } else {
-            furhat.say("You had nothing to lose. Let's move on.", abort = true)
+            furhat.say("You had nothing to lose. Why did you stop? Whatever. Let's move on.", abort = true)
         }
         goto(ButtonGameInstructions)
     }

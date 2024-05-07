@@ -47,9 +47,9 @@ fun FlowControlRunner.userStatusNegative() {
 
 fun FlowControlRunner.userStatusUnknown() {
     if (users.current.polite) {
-        furhat.say("Yeah. Nature really fascinates me. Someday, I'd like to visit the Appalachian Mountains.")
+        furhat.say("Yeah. I see.")
     } else {
-        furhat.say("Weather is nice.")
+        furhat.say("Okay.")
     }
     goto(DieGameInstructions)
 }
