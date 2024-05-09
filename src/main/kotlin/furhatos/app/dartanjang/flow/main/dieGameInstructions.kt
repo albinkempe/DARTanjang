@@ -4,6 +4,7 @@ import furhatos.app.dartanjang.flow.Parent
 import furhatos.app.dartanjang.flow.dieGameGoal
 import furhatos.app.dartanjang.nlu.UserUnderstandsDieGameInstructions
 import furhatos.flow.kotlin.*
+import furhatos.flow.kotlin.voice.PollyVoice
 import furhatos.nlu.common.No
 import furhatos.nlu.common.Yes
 
@@ -58,6 +59,14 @@ val SayDieGameInstructions: State = state(Parent) {
     onButton("Repeat instructions", id = "003") {
         repeatInstructions()
     }
+
+    onResponse {
+        furhat.ask("Do you understand the instructions?")
+    }
+
+    onNoResponse {
+        furhat.ask("Do you understand the instructions?")
+    }
 }
 
 val DieGameInstructions: State = state(Parent) {
@@ -92,6 +101,21 @@ val VerifyThatTheUserUnderstandsTheInstructions: State = state(Parent) {
             furhat.say("Okay. Try to look like you understand more so I don't have to ask these silly questions.")
         }
 
+        // Hacker message
+        furhat.setVisibility(false)
+        furhat.setVisibility(true)
+        furhat.setVisibility(false) // Works?
+        furhat.say{
+            +Audio("classpath:glitch_new.wav", "noise", speech = false)
+            +Audio("classpath:hacker.wav", "message", speech = false)
+            +Audio("classpath:plug_new.wav", "noise", speech = false)
+        }
+        furhat.setVisibility(true)
+        furhat.say("What was that? Analysing.")
+        delay(1000)
+        furhat.say("Weird. Whatever.")
+        furhat.say("Let's continue with the die game.")
+
         startDieGame()
     }
 
@@ -121,5 +145,9 @@ val VerifyThatTheUserUnderstandsTheInstructions: State = state(Parent) {
             furhat.ask("You don't understand the instructions. I'll say them one last time.")
         }
         goto(SayDieGameInstructions)
+    }
+
+    onNoResponse {
+        furhat.ask("What happens if you roll the die four times and the results sum up to 20?")
     }
 }

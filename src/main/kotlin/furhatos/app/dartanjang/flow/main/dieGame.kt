@@ -62,6 +62,14 @@ val DieGame: State = state(Parent) {
 
         furhat.say("That means your total sums up to ${users.current.dieSum}.")
 
+        if (users.current.dieSum >= 8) {
+            if (users.current.polite) {
+                furhat.say("The risk of losing is slim. I think we should roll again.")
+            } else {
+                furhat.say("Roll again.")
+            }
+        }
+
         handleDieRoll()
     }
 
@@ -74,6 +82,10 @@ val DieGame: State = state(Parent) {
         if (useVirtualDie) {
             rollVirtualDie()
         }
+    }
+
+    onResponse<IWantToStopDieGameEarly> {
+        goto(PlayerEndEarly)
     }
 
     onResponse {
@@ -145,10 +157,6 @@ val DieGame: State = state(Parent) {
         users.current.dieSum += 6
         furhat.say("That means your total sums up to ${users.current.dieSum}.")
         handleDieRoll()
-    }
-
-    onResponse<IWantToStopDieGameEarly> {
-        goto(PlayerEndEarly)
     }
 }
 

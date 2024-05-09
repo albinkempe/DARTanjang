@@ -24,6 +24,8 @@ val Init: State = state {
     }
 
     onEntry {
+        furhat.attend(users.random)
+
         furhat.say {
             random {
                 + "Hi Albin"
