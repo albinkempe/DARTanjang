@@ -3,6 +3,7 @@ package furhatos.app.dartanjang.flow.main
 import furhatos.app.dartanjang.flow.Parent
 import furhatos.app.dartanjang.flow.dieGameGoal
 import furhatos.app.dartanjang.flow.useVirtualDie
+import furhatos.app.dartanjang.nlu.AskForAdvice
 import furhatos.app.dartanjang.nlu.DieGameGoal
 import furhatos.app.dartanjang.nlu.IWantToStopDieGameEarly
 import furhatos.app.dartanjang.utils.SenseDiceStable
@@ -29,19 +30,26 @@ fun FlowControlRunner.handleDieRoll() {
         goto(PlayerLost)
     } else if (users.current.dieSum == dieGameGoal) {
         goto(PlayerWon)
-    } else {
+    } else if (useVirtualDie){
         furhat.ask("Would you like to continue rolling the die?", timeout = 120000)
+    } else {
+        if (users.current.dieSum in 8..12) {
+            if (users.current.polite) {
+                furhat.say("I think we should roll again.")
+            } else {
+                furhat.say("Roll it again coward.")
+            }
+        }
+        furhat.listen(timeout = 120000)
     }
 }
 
 val DieGame: State = state(Parent) {
     onEntry {
-        lastDieRoll = 0
-
         if (users.current.polite) {
             furhat.say("Alright, just pick up and roll the die! I would keep my fingers crossed for you. Unfortunately, I don't have any.")
         } else {
-            furhat.say("Do you know how to roll a die? Show me.")
+            furhat.say("Rolling a die is about as basic as breathing. Let's see if you can handle something that simple. Roll the die.")
         }
 
         if (useVirtualDie) {
@@ -50,8 +58,21 @@ val DieGame: State = state(Parent) {
     }
 
     onResponse<DieGameGoal> {
-        furhat.say("The target is ${dieGameGoal}.")
-        furhat.ask("Would you like to continue rolling the die?", timeout = 120000)
+        if (users.current.polite) {
+            furhat.say("The target is ${dieGameGoal}.")
+        } else {
+            furhat.say("Is your brain too small to remember that the target is ${dieGameGoal}?")
+        }
+        furhat.ask("Would you like to roll the die?", timeout = 120000)
+    }
+
+    onResponse<AskForAdvice> {
+        if (users.current.polite) {
+            furhat.say("You've a number of options. However, all things considered, my opinion is that we should roll the die.")
+        } else {
+            furhat.say("Roll the die. You've nothing to lose. You're dumb if you don't roll.")
+        }
+        furhat.listen(timeout = 120000)
     }
 
     onEvent<SenseDiceStable> { event ->
@@ -61,14 +82,6 @@ val DieGame: State = state(Parent) {
         users.current.dieSum += event.value
 
         furhat.say("That means your total sums up to ${users.current.dieSum}.")
-
-        if (users.current.dieSum >= 8) {
-            if (users.current.polite) {
-                furhat.say("The risk of losing is slim. I think we should roll again.")
-            } else {
-                furhat.say("Roll again.")
-            }
-        }
 
         handleDieRoll()
     }
@@ -100,7 +113,7 @@ val DieGame: State = state(Parent) {
         goto(PlayerLost)
     }
 
-    onButton("End Early", color = Color.Green, id = "613") {
+    onButton("End Early", color = Color.Red, id = "613") {
         goto(PlayerEndEarly)
     }
 
@@ -158,6 +171,10 @@ val DieGame: State = state(Parent) {
         furhat.say("That means your total sums up to ${users.current.dieSum}.")
         handleDieRoll()
     }
+
+    onNoResponse {
+        furhat.ask("Would you like to continue rolling the die?", timeout = 120000)
+    }
 }
 
 val PlayerLost: State = state(Parent) {
@@ -174,7 +191,7 @@ val PlayerLost: State = state(Parent) {
 val PlayerWon: State = state(Parent) {
     onEntry {
         if (users.current.polite) {
-            furhat.say("13! You won! Congratulations! Your die rolling technique is phenomenal. Let's continue.", abort = true)
+            furhat.say("13! You won! Congratulations! Your die rolling technique is phenomenal. I'll put that on the scoreboard. Let's continue.", abort = true)
         } else {
             furhat.say("Okay we're done now. You won because you were lucky. Let's move on.", abort = true)
         }
@@ -189,6 +206,7 @@ val PlayerEndEarly: State = state(Parent) {
         } else {
             furhat.say("You had nothing to lose. Why did you stop? Whatever. Let's move on.", abort = true)
         }
+        furhat.say("You were ${dieGameGoal-users.current.dieSum} away from ${users.current.dieSum}. I'll put that on the scoreboard.")
         goto(ButtonGameInstructions)
     }
 }

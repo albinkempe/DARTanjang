@@ -31,7 +31,7 @@ fun FlowControlRunner.userStatusPositive() {
     if (users.current.polite) {
         furhat.say("That is quite wonderful to hear. That makes me happy too!")
     } else {
-        furhat.say("Cool.")
+        furhat.say("Cool. We really should get going with the experiment.")
     }
     goto(DieGameInstructions)
 }
@@ -40,16 +40,16 @@ fun FlowControlRunner.userStatusNegative() {
     if (users.current.polite) {
         furhat.say("I am so sorry to hear that. I hope you feel better soon.")
     } else {
-        furhat.say("Okay.")
+        furhat.say("Okay. We really should get going with the experiment.")
     }
     goto(DieGameInstructions)
 }
 
 fun FlowControlRunner.userStatusUnknown() {
     if (users.current.polite) {
-        furhat.say("Yeah. I see.")
+        furhat.say("I see. I'm excited to start the experiment!")
     } else {
-        furhat.say("Okay.")
+        furhat.say("Okay. We really should get going with the experiment.")
     }
     goto(DieGameInstructions)
 }
@@ -103,12 +103,20 @@ val Greeting: State = state(Parent) {
         userStatusNegative()
     }
 
-    onButton("Jump to die game", color = Color.Yellow) {
+    onButton("Jump to die game instructions", color = Color.Yellow) {
         goto(DieGameInstructions)
     }
 
-    onButton("Jump to experiment", color = Color.Yellow) {
+    onButton("Jump to die game", color = Color.Yellow) {
+        goto(DieGame)
+    }
+
+    onButton("Jump to button game instructions", color = Color.Yellow) {
         goto(ButtonGameInstructions)
+    }
+
+    onButton("Jump to button game", color = Color.Yellow) {
+        goto(ButtonGame)
     }
 
     onResponse {

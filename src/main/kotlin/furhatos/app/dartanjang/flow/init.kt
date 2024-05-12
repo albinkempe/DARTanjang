@@ -28,46 +28,41 @@ val Init: State = state {
 
         furhat.say {
             random {
-                + "Hi Albin"
-                + "Hello Albin"
+                + "Hi!"
+                + "Hello!"
             }
         }
         furhat.say("Please connect a button.")
     }
 
     onEvent<ButtonConnected> {
-        furhat.say("I have detected a button! Test if it works.")
-    }
-
-    onEvent<TrialButtonPressed> {
-        furhat.say("The button works! That's great! Would you like to start the experiment without a physical die?")
+        furhat.say("Button connected.")
+        furhat.say("Would you like to use a virtual die?")
         furhat.listen()
     }
 
     onResponse<Yes> {
-        furhat.say("I will now start the experiment in virtual die mode")
+        furhat.say("I will use a virtual die.")
         when {
-            //furhat.isVirtual() -> goto(Greeting) // Convenient to bypass the need for user when running Virtual Furhat
             users.hasAny() -> {
                 furhat.attend(users.random)
-                goto(Greeting)
+                goto(Ready)
             }
             else -> goto(Idle)
         }
     }
 
     onResponse<No> {
-        furhat.say("Okay. I'll take a short coffee break and wait until a die is connected.")
+        furhat.say("Okay. Please connected a die.")
     }
 
     onEvent<SenseDiceConnected> {
-        furhat.say("I will now start the experiment in physical die mode")
+        furhat.say("We'll use a physical die.")
         useVirtualDie = false
         when {
-            //furhat.isVirtual() -> goto(Greeting) // Convenient to bypass the need for user when running Virtual Furhat
             users.hasAny() -> {
                 furhat.attend(users.random)
-                goto(Greeting)
+                goto(Ready)
             }
             else -> goto(Idle)
         }

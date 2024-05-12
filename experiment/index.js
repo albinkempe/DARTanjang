@@ -8,6 +8,10 @@ var gameState
 var playerClicks
 var clickable = false
 
+function getIPaddr() {
+    return new URL(window.location.href).hostname
+}
+
 function greenClick() {
     //button.style.backgroundColor = "rgb(0, 183, 51)";
     button.src="images/button_green.png"
@@ -41,8 +45,9 @@ function redClick() {
 }
 
 function connectToSkill() {
-    setupWebSocket(document.getElementById("ipadress").value)
-    document.getElementById("connectionHandler").style.visibility = "hidden"
+    //setupWebSocket(document.getElementById("ipadress").value)
+    setupWebSocket(getIPaddr())
+    document.getElementById("connectButton").style.visibility = "hidden"
     gameState = 0 // 0 if trial, 1 if game
     playerClicks = 0
     clickable = true

@@ -42,10 +42,15 @@ main {
     border-radius: 100%;
 }
 
-#connectionHandler {
+#connectButton {
     position: absolute;
-    left: 20px;
-    top: 2px;
+    left: 132px;
+    top: 6px;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+    background-color: rgb(255, 244, 97);
 }
 
 @media screen and (orientation: portrait) {

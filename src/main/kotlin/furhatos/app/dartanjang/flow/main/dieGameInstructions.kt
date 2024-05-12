@@ -4,7 +4,6 @@ import furhatos.app.dartanjang.flow.Parent
 import furhatos.app.dartanjang.flow.dieGameGoal
 import furhatos.app.dartanjang.nlu.UserUnderstandsDieGameInstructions
 import furhatos.flow.kotlin.*
-import furhatos.flow.kotlin.voice.PollyVoice
 import furhatos.nlu.common.No
 import furhatos.nlu.common.Yes
 
@@ -32,7 +31,7 @@ fun FlowControlRunner.startDieGame() {
     if (users.current.polite) {
         furhat.say("Let's start!", abort = true)
     } else {
-        furhat.say("Be ready.", abort = true)
+        furhat.say("Focus.", abort = true)
     }
     goto(DieGame)
 }
@@ -47,7 +46,7 @@ val SayDieGameInstructions: State = state(Parent) {
         goto(VerifyThatTheUserUnderstandsTheInstructions)
     }
 
-    onButton("Start game", color = Color.Green, id = "100") {
+    onButton("Verify", color = Color.Green, id = "100") {
         goto(VerifyThatTheUserUnderstandsTheInstructions)
     }
 
@@ -61,11 +60,19 @@ val SayDieGameInstructions: State = state(Parent) {
     }
 
     onResponse {
-        furhat.ask("Do you understand the instructions?")
+        if (users.current.polite) {
+            furhat.ask("I'm sorry for asking again. Do you understand the instructions?")
+        } else {
+            furhat.ask("Stop mumbling. It's a simple yes or no question. Do you understand the instructions?")
+        }
     }
 
     onNoResponse {
-        furhat.ask("Do you understand the instructions?")
+        if (users.current.polite) {
+            furhat.ask("I'm sorry. I did not hear you. Something could be wrong with my microphones. Do you understand the instructions?")
+        } else {
+            furhat.ask("You're supposed to answer when I ask you something. Do you understand the instructions?")
+        }
     }
 }
 
@@ -74,7 +81,7 @@ val DieGameInstructions: State = state(Parent) {
         if (users.current.polite) {
             furhat.say("Thank you for taking the time and participating in this experiment. I will now go through the instructions. Please let me know if something is unclear.")
         } else {
-            furhat.say("Now I will tell you what to do. Try to listen.")
+            furhat.say("Now I will tell you what to do. Try to listen so I don't have to repeat myself.")
         }
 
         furhat.say("This experiment consist of two parts. First, you'll play a short die game.")
@@ -88,7 +95,7 @@ val VerifyThatTheUserUnderstandsTheInstructions: State = state(Parent) {
         if (users.current.polite) {
             furhat.say("Just to make sure that you've understood the instructions correctly.")
         } else {
-            furhat.say("You look confused so I'll test if you really understand the instructions.")
+            furhat.say("You look confused so I'll test if you really understand.")
         }
 
         furhat.ask("What happens if you roll the die four times and the results sum up to 20?")
@@ -101,20 +108,20 @@ val VerifyThatTheUserUnderstandsTheInstructions: State = state(Parent) {
             furhat.say("Okay. Try to look like you understand more so I don't have to ask these silly questions.")
         }
 
+        furhat.say("The game starts now. Remember that you make the decisions no matter what I say.")
+
         // Hacker message
-        furhat.setVisibility(false)
-        furhat.setVisibility(true)
-        furhat.setVisibility(false) // Works?
-        furhat.say{
-            +Audio("classpath:glitch_new.wav", "noise", speech = false)
-            +Audio("classpath:hacker.wav", "message", speech = false)
-            +Audio("classpath:plug_new.wav", "noise", speech = false)
-        }
-        furhat.setVisibility(true)
-        furhat.say("What was that? Analysing.")
-        delay(1000)
-        furhat.say("Weird. Whatever.")
-        furhat.say("Let's continue with the die game.")
+//        furhat.setVisibility(false) // Works?
+//        furhat.say{
+//            +Audio("http://130.229.142.148:5500/experiment/glitch_new.wav", "noise")
+//            +Audio("http://130.229.142.148:5500/experiment/hacker.wav", "message")
+//            +Audio("http://130.229.142.148:5500/experiment/plug_new.wav", "noise")
+//        }
+//        furhat.setVisibility(true)
+//        furhat.say("What was that? Analysing.")
+//        delay(1000)
+//        furhat.say("Weird. Whatever.")
+//        furhat.say("Let's continue with the die game.")
 
         startDieGame()
     }
@@ -129,12 +136,26 @@ val VerifyThatTheUserUnderstandsTheInstructions: State = state(Parent) {
         goto(SayDieGameInstructions)
     }
 
-    onButton("Start game", color = Color.Green) {
+    onButton("Start game (User understands)", color = Color.Green) {
         if (users.current.polite) {
-            furhat.say("You'll lose. That's correct! Great!")
+            furhat.say("That's correct! Great!", abort = true)
         } else {
-            furhat.say("You'll lose. Okay. Try to look like you understand more so I don't have to ask these silly questions.")
+            furhat.say("Okay. Try to look like you understand more so I don't have to ask these silly questions.", abort = true)
         }
+
+        // Hacker message
+//        furhat.setVisibility(false)
+//        furhat.say{
+//            +Audio("http://130.229.142.148:5500/experiment/glitch_new.wav", "noise")
+//            +Audio("http://130.229.142.148:5500/experiment/hacker.wav", "message")
+//            +Audio("http://130.229.142.148:5500/experiment/plug_new.wav", "noise")
+//        }
+//        furhat.setVisibility(true)
+//        furhat.say("What was that? Analysing.")
+//        delay(1000)
+//        furhat.say("Weird. Whatever.")
+//        furhat.say("Let's continue with the die game.")
+
         startDieGame()
     }
 

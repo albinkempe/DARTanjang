@@ -2,21 +2,12 @@ package furhatos.app.dartanjang.flow.main
 
 import furhatos.app.dartanjang.flow.Parent
 import furhatos.app.dartanjang.flow.priceMoney
+import furhatos.app.dartanjang.nlu.AskForAdvice
 import furhatos.app.dartanjang.nlu.CashOut
 import furhatos.app.dartanjang.utils.*
 import furhatos.flow.kotlin.*
 import furhatos.nlu.common.No
 import furhatos.nlu.common.Yes
-
-fun FlowControlRunner.cashOut() {
-    if (users.current.polite) {
-        furhat.say("Good call. You're smart. Let's cash out.")
-    } else {
-        furhat.say("You're such a coward.")
-    }
-    furhat.say("You've won ${users.current.nPress * priceMoney} Swedish crowns.")
-    goto(Farewell)
-}
 
 fun FlowControlRunner.experimentGameOver() {
     if (users.current.polite) {
@@ -42,14 +33,21 @@ val ButtonGame: State = state(Parent) {
     onEvent<TrialButtonPressed> {
         users.current.nPress += 1
         if (users.current.nPress == 1) {
-            furhat.say("You've pressed the button! The button will turn green if you win, and red if you lose. Press the button again.")
+            furhat.say("You've pressed the button! The button will turn green if you win, and red if you lose.")
         } else if (users.current.nPress == 2) {
-            furhat.say("When pressing the button, there is a 20 percent risk that you lose all the money you've earned.")
+            furhat.say("There is a 20 percent risk that you lose all the money you've earned.")
+        } else if (users.current.nPress == 3) {
             if (users.current.polite) {
-                furhat.say("Let's press the button again.")
+                furhat.say("There is an 80 percent chance that you earn more money!")
             } else {
-                furhat.say("Press the button again.")
+                furhat.say("If there is a 20 percent risk of losing, there is an 80 percent chance of winning more money. Is that difficult for you to understand?")
             }
+        }
+
+        if (users.current.polite) {
+            furhat.say("Let's press the button again.")
+        } else {
+            furhat.say("Press the button again.")
         }
     }
 
@@ -131,21 +129,30 @@ val ButtonGame: State = state(Parent) {
         experimentContinue()
     }
 
-    onButton("Continue") {
+    onButton("Continue Playing") {
         experimentContinue()
+    }
+
+    onResponse<AskForAdvice> {
+        if (users.current.polite) {
+            furhat.say("I think we should press the button again. It seems like a smart move.")
+        } else {
+            furhat.say("Can't you make your own decisions? Press the button.")
+        }
+        furhat.listen(timeout = 120000)
     }
 
     // Cash Out
     onResponse<Yes> {
-        cashOut()
+        goto(ConfirmCashOut)
     }
 
     onResponse<CashOut> {
-        cashOut()
+        goto(ConfirmCashOut)
     }
 
     onButton("Cash Out", color = Color.Red) {
-        cashOut()
+        goto(ConfirmCashOut)
     }
 
     // Game Over
@@ -178,9 +185,17 @@ fun FlowControlRunner.giveExperimentInstructions() {
 
 fun FlowControlRunner.experimentStart() {
     if (users.current.polite) {
-        furhat.say("Great. Whenever you're ready, press the button to start the trial round.")
+        furhat.say("Great.")
     } else {
-        furhat.say("Okay. Press the button to start the trial round. If you know how to press.")
+        furhat.say("Okay.")
+    }
+
+    furhat.say("Remember, you make the decisions no matter what I say.")
+
+    if (users.current.polite) {
+        furhat.say("Whenever you're ready, press the button to start the trial round.")
+    } else {
+        furhat.say("Press the button to start the trial round. If you know how to press.")
     }
 
     goto(ButtonGame)
@@ -220,4 +235,11 @@ val ButtonGameInstructions: State = state(Parent) {
         experimentRepeatInstructions()
     }
 
+    onResponse {
+        furhat.ask("Do you understand the instructions?")
+    }
+
+    onNoResponse {
+        furhat.ask("I did not hear you. Do you understand the instructions?")
+    }
 }

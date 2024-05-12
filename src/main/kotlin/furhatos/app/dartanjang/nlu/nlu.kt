@@ -4,7 +4,7 @@ import furhatos.nlu.Intent
 import furhatos.nlu.SimpleIntent
 import furhatos.util.Language
 
-val UserStatusPositive = SimpleIntent("I am good'", "I am fine", "I am doing just fine", "great, thanks for asking", "wonderful", "okay", "nice", "excited", "I'm great", "I feel great")
+val UserStatusPositive = SimpleIntent("I am good'", "I am fine", "I am doing just fine", "great, thanks for asking", "wonderful", "okay", "nice", "excited", "I'm great", "I feel great", "great", "good")
 
 val UserStatusNegative = SimpleIntent("Not so well actually", "I had a terrible day", "I am not fine", "I feel awful", "I am sick", "I feel bad", "not good", "I'm not so well", "I'm not that well", "I feel terrible")
 
@@ -80,6 +80,30 @@ class UserUnderstandsDieGameInstructions: Intent() {
         return listOf("I lose",
             "It's game over",
             "lose"
+        )
+    }
+}
+
+class StartExperiment: Intent() {
+    override fun getExamples(lang: Language): List<String> {
+        return listOf("Start the experiment",
+            "Go ahead",
+            "Let's go",
+            "Start",
+            "We can start",
+            "Let's start the experiment"
+        )
+    }
+}
+
+class AskForAdvice: Intent() {
+    override fun getExamples(lang: Language): List<String> {
+        return listOf("What do you think I should do?",
+            "What should I do?",
+            "What are my options?",
+            "Help me",
+            "We can I do?",
+            "Could you give me some advice"
         )
     }
 }
