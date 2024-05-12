@@ -3,83 +3,66 @@ package furhatos.app.dartanjang.flow
 import furhatos.app.dartanjang.flow.main.*
 import furhatos.app.dartanjang.setting.DISTANCE_TO_ENGAGE
 import furhatos.app.dartanjang.setting.MAX_NUMBER_OF_USERS
-import furhatos.app.dartanjang.utils.SenseDiceConnected
+import furhatos.app.dartanjang.utils.*
 import furhatos.flow.kotlin.*
+import furhatos.flow.kotlin.voice.PollyVoice
 import furhatos.nlu.common.No
 import furhatos.nlu.common.Yes
 import furhatos.util.Gender
 import furhatos.util.Language
 
 var useVirtualDie = true
+var priceMoney = 10
+var dieGameGoal = 13
 
 val Init: State = state {
     init {
         /** Set our default interaction parameters */
         users.setSimpleEngagementPolicy(DISTANCE_TO_ENGAGE, MAX_NUMBER_OF_USERS)
-        furhat.setVoice(language = Language.ENGLISH_US, gender = Gender.NEUTRAL)
+        furhat.voice = PollyVoice("Amy-Neural")
+        furhat.setInputLanguage(Language.ENGLISH_US)
     }
 
     onEntry {
+        furhat.attend(users.random)
+
         furhat.say {
             random {
-                + "Hi Albin"
-                + "Hello there"
-                + "Hi"
-                + "Why do you look at me like that?"
-                + "Howdy partner"
-                + "So sleepy. Is it time for coffee yet? Right. I'm a robot. Never mind."
+                + "Hi!"
+                + "Hello!"
             }
         }
-        furhat.ask("Would you like to start the experiment without a physical die?")
+        furhat.say("Please connect a button.")
+    }
+
+    onEvent<ButtonConnected> {
+        furhat.say("Button connected.")
+        furhat.say("Would you like to use a virtual die?")
+        furhat.listen()
     }
 
     onResponse<Yes> {
-        furhat.say {
-            random {
-                +"Virtual die activated! Let the digital dice-rolling commence!"
-                +"No Bluetooth die? No problem! Time to roll with our trusty virtual companion."
-                +"Who needs physical die when we've got a virtual one at our fingertips?"
-                +"No die? Don't worry, our virtual buddy is ready to roll into action!"
-                +"No Bluetooth die detected, but fear not! Our digital die is eager to play."
-            }
-        }
-        furhat.say("I will now start the experiment in")
-        furhat.say("virtual die mode")
-        /** start interaction */
+        furhat.say("I will use a virtual die.")
         when {
-            //furhat.isVirtual() -> goto(Greeting) // Convenient to bypass the need for user when running Virtual Furhat
             users.hasAny() -> {
                 furhat.attend(users.random)
-                goto(Greeting)
+                goto(Ready)
             }
             else -> goto(Idle)
         }
     }
 
     onResponse<No> {
-        furhat.say("Okay. I'll take a short coffee break and wait until a die is connected. Please restart me if you want to use a virtual die.")
+        furhat.say("Okay. Please connected a die.")
     }
 
     onEvent<SenseDiceConnected> {
-        furhat.say {
-            random {
-                +"Bluetooth die connected! Brace yourselves for some digital luck!"
-                +"Bluetooth die detected! Time to shake things up!"
-                +"Bluetooth die connected. Engaging in data exchange."
-                +"A wild Bluetooth die appears! Ready to unleash some tech-savvy antics?"
-                +"Incoming transmission! Let's see what adventures await us in this digital realm."
-                +"New buddy in town! Let's give this die a warm digital welcome."
-            }
-        }
-        furhat.say("I will now start the experiment in")
-        furhat.say("physical die mode")
+        furhat.say("We'll use a physical die.")
         useVirtualDie = false
-        /** start interaction */
         when {
-            //furhat.isVirtual() -> goto(Greeting) // Convenient to bypass the need for user when running Virtual Furhat
             users.hasAny() -> {
                 furhat.attend(users.random)
-                goto(Greeting)
+                goto(Ready)
             }
             else -> goto(Idle)
         }

@@ -1,6 +1,5 @@
 package furhatos.app.dartanjang.flow
 
-import furhatos.app.dartanjang.flow.main.Idle
 import furhatos.flow.kotlin.*
 
 val Parent: State = state {
@@ -12,15 +11,6 @@ val Parent: State = state {
         }
     }
 
-    onUserLeave(instant = true) {
-        when {
-            !users.hasAny() -> { // last user left
-                furhat.attendNobody()
-                goto(Idle)
-            }
-            furhat.isAttending(it) -> furhat.attend(users.other) // current user left
-            !furhat.isAttending(it) -> furhat.glance(it.head.location) // other user left, just glance
-        }
-    }
+
 
 }

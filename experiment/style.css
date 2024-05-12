@@ -1,0 +1,70 @@
+html {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    background-color: rgb(255, 255, 255);
+}
+
+main {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    gap: 1em;
+}
+
+#hint {
+    font-size: x-large;
+    text-align: center;
+    visibility: hidden;
+}
+
+#button {
+    height: 75vh;
+    width: 75vh;
+    margin: 0 auto;
+}
+
+#info {
+    font-size: xx-large;
+    font-weight: bold;
+    margin: 0 auto;
+    color: rgb(29, 29, 29);
+}
+
+#status {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 8px;
+    height: 8px;
+    background-color: gray;
+    border-radius: 100%;
+}
+
+#connectButton {
+    position: absolute;
+    left: 132px;
+    top: 6px;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+    background-color: rgb(255, 244, 97);
+}
+
+@media screen and (orientation: portrait) {
+    #button {
+        height: 95vw;
+        width: 95vw;
+    }
+
+    main {
+        height: 90vh;
+        gap: 3em;
+    }
+
+    #hint {
+        font-size: medium;
+    }
+}
