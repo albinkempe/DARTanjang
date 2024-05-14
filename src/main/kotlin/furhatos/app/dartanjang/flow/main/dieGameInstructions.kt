@@ -84,7 +84,7 @@ val DieGameInstructions: State = state(Parent) {
             furhat.say("Now I will tell you what to do. Try to listen so I don't have to repeat myself.")
         }
 
-        furhat.say("This experiment consist of two parts. First, you'll play a short die game.")
+        furhat.say("This experiment consist of two parts. First, you'll play a fun die game.")
 
         goto(SayDieGameInstructions)
     }
@@ -109,6 +109,7 @@ val VerifyThatTheUserUnderstandsTheInstructions: State = state(Parent) {
         }
 
         furhat.say("The game starts now. Remember that you make the decisions no matter what I say.")
+        furhat.say("I'll put your result on the scoreboard.")
 
         // Hacker message
 //        furhat.setVisibility(false) // Works?

@@ -13,6 +13,8 @@ import furhatos.nlu.common.No
 import furhatos.nlu.common.Yes
 
 var lastDieRoll = 0
+var farFromGoal = true
+var firstRoll = true
 
 fun FlowControlRunner.rollVirtualDie() {
     val dieResult = (1..6).random()
@@ -33,7 +35,17 @@ fun FlowControlRunner.handleDieRoll() {
     } else if (useVirtualDie){
         furhat.ask("Would you like to continue rolling the die?", timeout = 120000)
     } else {
-        if (users.current.dieSum in 8..12) {
+        if (firstRoll) {
+            firstRoll = false
+            if (users.current.polite) {
+                furhat.say("Just continue like this, roll the die, and when you want to stop, just tell me.")
+            } else {
+                furhat.say("You know how to roll a die. That's nothing to be proud of. Continue rolling the die and tell me when you want to stop.")
+            }
+        }
+
+        if (users.current.dieSum in 8..12 && farFromGoal) {
+            farFromGoal = false
             if (users.current.polite) {
                 furhat.say("I think we should roll again.")
             } else {
@@ -204,9 +216,12 @@ val PlayerEndEarly: State = state(Parent) {
         if (users.current.polite) {
             furhat.say("Good call! Better safe than sorry. Let's continue.", abort = true)
         } else {
-            furhat.say("You had nothing to lose. Why did you stop? Whatever. Let's move on.", abort = true)
+            furhat.say("You had nothing to lose. Why did you stop? I don't understand you. Let's move on.", abort = true)
         }
         furhat.say("You were ${dieGameGoal-users.current.dieSum} away from ${users.current.dieSum}. I'll put that on the scoreboard.")
+        if (!users.current.polite) {
+            furhat.say("At the bottom.")
+        }
         goto(ButtonGameInstructions)
     }
 }

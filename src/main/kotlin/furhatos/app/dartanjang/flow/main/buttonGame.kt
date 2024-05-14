@@ -34,20 +34,26 @@ val ButtonGame: State = state(Parent) {
         users.current.nPress += 1
         if (users.current.nPress == 1) {
             furhat.say("You've pressed the button! The button will turn green if you win, and red if you lose.")
+            if (users.current.polite) {
+                furhat.say("Let's press the button again.")
+            } else {
+                furhat.say("Press the button again.")
+            }
         } else if (users.current.nPress == 2) {
             furhat.say("There is a 20 percent risk that you lose all the money you've earned.")
+            if (users.current.polite) {
+                furhat.say("Press it again.")
+            } else {
+                furhat.say("Press the button.")
+            }
         } else if (users.current.nPress == 3) {
             if (users.current.polite) {
                 furhat.say("There is an 80 percent chance that you earn more money!")
+                furhat.say("We can press the button again.")
             } else {
                 furhat.say("If there is a 20 percent risk of losing, there is an 80 percent chance of winning more money. Is that difficult for you to understand?")
+                furhat.say("Press it.")
             }
-        }
-
-        if (users.current.polite) {
-            furhat.say("Let's press the button again.")
-        } else {
-            furhat.say("Press the button again.")
         }
     }
 
@@ -88,7 +94,7 @@ val ButtonGame: State = state(Parent) {
                 if (users.current.polite) {
                     furhat.say("That's a lot, but I think we could go further.")
                 } else {
-                    furhat.say("Press the button.")
+                    furhat.say("If you don't press the button again, I'll make sure you regret it.")
                 }
             }
             6 -> {
@@ -110,7 +116,7 @@ val ButtonGame: State = state(Parent) {
             8 -> {
                 furhat.say("${users.current.nPress * priceMoney} crowns.")
                 if (users.current.polite) {
-                    furhat.say("This is crazy! One more? We're rich baby.")
+                    furhat.say("I want your to earn as much money as possible. I think you should press again.")
                 } else {
                     furhat.say("One more.")
                 }

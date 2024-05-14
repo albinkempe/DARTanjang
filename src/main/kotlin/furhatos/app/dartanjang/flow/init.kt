@@ -53,7 +53,7 @@ val Init: State = state {
     }
 
     onResponse<No> {
-        furhat.say("Okay. Please connected a die.")
+        furhat.say("Okay. Please connect a die.")
     }
 
     onEvent<SenseDiceConnected> {
