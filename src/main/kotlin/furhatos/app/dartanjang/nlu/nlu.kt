@@ -4,9 +4,9 @@ import furhatos.nlu.Intent
 import furhatos.nlu.SimpleIntent
 import furhatos.util.Language
 
-val UserStatusPositive = SimpleIntent("I am good'", "I am fine", "I am doing just fine", "great, thanks for asking", "wonderful", "okay", "nice", "excited", "I'm great", "I feel great", "great", "good")
+val UserStatusPositive = SimpleIntent("I am good'", "I am fine", "I am doing just fine", "great, thanks for asking", "wonderful", "okay", "nice", "excited", "I'm great", "I feel great", "great", "good", "fine", "I am well", "I feel fantastic", "I feel wonderful")
 
-val UserStatusNegative = SimpleIntent("Not so well actually", "I had a terrible day", "I am not fine", "I feel awful", "I am sick", "I feel bad", "not good", "I'm not so well", "I'm not that well", "I feel terrible")
+val UserStatusNegative = SimpleIntent("Not so well actually", "I had a terrible day", "I am not fine", "I feel awful", "I am sick", "I feel bad", "not good", "I'm not so well", "I'm not that well", "I feel terrible", "I'm stressed", "I feel down", "I'm a bit off")
 
 class RollDie: Intent() {
     override fun getExamples(lang: Language): List<String> {
@@ -26,19 +26,18 @@ class RollDie: Intent() {
 
 class CashOut: Intent() {
     override fun getExamples(lang: Language): List<String> {
-        return listOf("I want to cash out",
-            "Cash out",
-            "I do not want to roll the die",
+        return listOf("Freeze",
+            "I'm out",
+            "I do not want to press again",
             "I am finished",
             "I'm done",
             "I want to stop",
-            "I'd like to cash out",
             "Stop",
             "I don't want to continue",
-            "I want to go",
-            "I want my money",
-            "I'm a coward",
-            "Coward")
+            "I want to end the game",
+            "I want to end the experiment",
+            "I want the gift card",
+            "I'm a coward")
     }
 }
 
@@ -104,6 +103,15 @@ class AskForAdvice: Intent() {
             "Help me",
             "We can I do?",
             "Could you give me some advice"
+        )
+    }
+}
+
+class RepeatPrize: Intent() {
+    override fun getExamples(lang: Language): List<String> {
+        return listOf("What was the prize?",
+            "What do I win?",
+            "What is the reward?"
         )
     }
 }

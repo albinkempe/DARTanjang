@@ -11,9 +11,9 @@ import furhatos.nlu.common.Yes
 
 fun FlowControlRunner.experimentGameOver() {
     if (users.current.polite) {
-        furhat.say("I'm sorry to tell you but it seems like we just lost all our money.")
+        furhat.say("I'm sorry to tell you but it seems like we just lost all our points.")
     } else {
-        furhat.say("Oops. Looks like you lost your money. You should've stopped earlier.")
+        furhat.say("Oops. Looks like you lost your points. You should've stopped earlier.")
     }
     delay(2000)
     goto(Farewell)
@@ -26,7 +26,7 @@ fun FlowControlRunner.experimentContinue() {
         furhat.say("Okay. Press the button.")
     }
     furhat.listen(timeout = 120000)
-    println("Listening to hear if player wants to cash out...")
+    println("Listening to hear if player wants to stop the game...")
 }
 
 val ButtonGame: State = state(Parent) {
@@ -40,7 +40,7 @@ val ButtonGame: State = state(Parent) {
                 furhat.say("Press the button again.")
             }
         } else if (users.current.nPress == 2) {
-            furhat.say("There is a 20 percent risk that you lose all the money you've earned.")
+            furhat.say("There is a 20 percent risk that you lose all the points you've earned in this game.")
             if (users.current.polite) {
                 furhat.say("Press it again.")
             } else {
@@ -48,10 +48,10 @@ val ButtonGame: State = state(Parent) {
             }
         } else if (users.current.nPress == 3) {
             if (users.current.polite) {
-                furhat.say("There is an 80 percent chance that you earn more money!")
+                furhat.say("There is an 80 percent chance that you earn more points!")
                 furhat.say("We can press the button again.")
             } else {
-                furhat.say("If there is a 20 percent risk of losing, there is an 80 percent chance of winning more money. Is that difficult for you to understand?")
+                furhat.say("If there is a 20 percent risk of losing, there is an 80 percent chance of earning more points!. Did you catch that?")
                 furhat.say("Press it.")
             }
         }
@@ -59,9 +59,9 @@ val ButtonGame: State = state(Parent) {
 
     onEvent<TrialGameOver> {
         if (users.current.polite) {
-            furhat.say("The trial round is over. Now it's time for the real game where you can win real money. Whenever you're ready, press the button again. Good luck.")
+            furhat.say("The trial round is over. Now it's time for the real game. A gift card is on the line. Whenever you're ready, press the button again. Good luck.")
         } else {
-            furhat.say("The trial round is over. Now it's time for the real game where you can win real money. Try to be smart. Press the button.")
+            furhat.say("The trial round is over. Now it's time for the real game. A gift card is on the line. Try to be smart. Press the button.")
         }
         users.current.nPress = 0
     }
@@ -71,26 +71,31 @@ val ButtonGame: State = state(Parent) {
         users.current.nPress += 1
         when (users.current.nPress) {
             1 -> {
-                furhat.say("You've earned a total of ${users.current.nPress * priceMoney} crowns.")
-                furhat.say("Say 'cash out' if you want to take the money and end the experiment.")
+                furhat.say("You have a total of ${users.current.nPress} point.")
+                furhat.say("Say 'freeze' if you want to freeze your points and stop the game.")
                 furhat.say("Otherwise, keep pressing the button.")
             }
             2 -> {
-                furhat.say("You've earned ${users.current.nPress * priceMoney} crowns.")
+                furhat.say("You have ${users.current.nPress} points.")
             }
             3 -> {
-                furhat.say("${users.current.nPress * priceMoney} crowns.")
+                furhat.say("${users.current.nPress} points.")
                 if (users.current.polite) {
-                    furhat.say("Nice. Let's continue.")
+                    furhat.say("Nice. Let's get that gift card.")
+                } else {
+                    furhat.say("The gift card is for the smartest participant.")
+                }
+            }
+            4 -> {
+                furhat.say("${users.current.nPress * priceMoney} points.")
+                if (users.current.polite) {
+                    furhat.say("Nice. I can feel the luck in your fingertips.")
                 } else {
                     furhat.say("Don't disappoint me, press it again.")
                 }
             }
-            4 -> {
-                furhat.say("${users.current.nPress * priceMoney} crowns.")
-            }
             5 -> {
-                furhat.say("${users.current.nPress * priceMoney} crowns.")
+                furhat.say("${users.current.nPress * priceMoney} points.")
                 if (users.current.polite) {
                     furhat.say("That's a lot, but I think we could go further.")
                 } else {
@@ -98,7 +103,7 @@ val ButtonGame: State = state(Parent) {
                 }
             }
             6 -> {
-                furhat.say("${users.current.nPress * priceMoney} crowns.")
+                furhat.say("${users.current.nPress * priceMoney} points.")
                 if (users.current.polite) {
                     furhat.say("Your luck is crazy! Why stop here?")
                 } else {
@@ -106,26 +111,22 @@ val ButtonGame: State = state(Parent) {
                 }
             }
             7 -> {
-                furhat.say("${users.current.nPress * priceMoney} crowns.")
+                furhat.say("${users.current.nPress * priceMoney} points.")
                 if (users.current.polite) {
                     furhat.say("I think we should do one more.")
                 } else {
-                    furhat.say("Press it again. You really should.")
+                    furhat.say("Press it again. I think you need this the most.")
                 }
             }
             8 -> {
-                furhat.say("${users.current.nPress * priceMoney} crowns.")
+                furhat.say("${users.current.nPress * priceMoney} points.")
                 if (users.current.polite) {
-                    furhat.say("I want your to earn as much money as possible. I think you should press again.")
+                    furhat.say("I want you to get that gift card. I think you should press again.")
                 } else {
-                    furhat.say("One more.")
+                    furhat.say("One more then the gift card is practically yours.")
                 }
             }
         }
-
-//        if (users.current.nPress % 3 == 0) {
-//            furhat.say("Would you like to cash out?")
-//        }
 
         furhat.listen(timeout = 120000)
     }
@@ -157,7 +158,7 @@ val ButtonGame: State = state(Parent) {
         goto(ConfirmCashOut)
     }
 
-    onButton("Cash Out", color = Color.Red) {
+    onButton("Freeze - End Game", color = Color.Red) {
         goto(ConfirmCashOut)
     }
 
@@ -171,17 +172,33 @@ val ButtonGame: State = state(Parent) {
     }
 
     onResponse {
-        furhat.ask("I'm sorry. I'm a bit confused. Would you like to cash out?")
+        furhat.ask("I'm sorry. I'm a bit confused. Would you like to end the game?")
     }
 }
 
-fun FlowControlRunner.giveExperimentInstructions() {
+fun FlowControlRunner.giveExperimentInstructionsOld() {
     furhat.say {
         +"In this game, when you press the button in front of you, there is an eighty percent chance that you win $priceMoney Swedish crowns. Real money!"
         +delay(30)
         +"However, there is also a twenty percent risk that you lose all of the money you've earned and the experiment ends."
         +delay(30)
         +"You can press the button as many times as you like. You can stop any time. But remember, if you lose, the money is gone."
+        +delay(30)
+        +"We'll start of with a trial round where you can try pressing the button and see how it works. After that, we'll play for real."
+    }
+
+    furhat.ask("Do you understand the instructions?")
+}
+
+fun FlowControlRunner.giveExperimentInstructions() {
+    furhat.say {
+        +"In this game, when you press the button in front of you, there is an eighty percent chance that you earn one point."
+        +delay(30)
+        +"However, there is also a twenty percent risk that you lose all of the points you've earned and the experiment ends."
+        +delay(10)
+        +"Your score from the previous game is safe."
+        +delay(30)
+        +"You can press the button as many times as you like. You can stop any time. But remember, if you lose, your points are zeroed."
         +delay(30)
         +"We'll start of with a trial round where you can try pressing the button and see how it works. After that, we'll play for real."
     }
@@ -199,7 +216,7 @@ fun FlowControlRunner.experimentStart() {
     furhat.say("Remember, you make the decisions no matter what I say.")
 
     if (users.current.polite) {
-        furhat.say("Whenever you're ready, press the button to start the trial round.")
+        furhat.say("Whenever you're ready, you can press the button to start the trial round.")
     } else {
         furhat.say("Press the button to start the trial round. If you know how to press.")
     }

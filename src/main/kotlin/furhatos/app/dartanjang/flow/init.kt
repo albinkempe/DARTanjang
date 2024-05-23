@@ -25,6 +25,7 @@ val Init: State = state {
 
     onEntry {
         furhat.attend(users.random)
+        furhat.audioFeed.enable()
 
         furhat.say {
             random {
@@ -33,6 +34,10 @@ val Init: State = state {
             }
         }
         furhat.say("Please connect a button.")
+    }
+
+    onEvent<TrialButtonPressed> {
+        furhat.say("Button pressed")
     }
 
     onEvent<ButtonConnected> {

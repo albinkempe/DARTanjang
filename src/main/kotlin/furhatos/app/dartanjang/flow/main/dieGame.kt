@@ -40,7 +40,7 @@ fun FlowControlRunner.handleDieRoll() {
             if (users.current.polite) {
                 furhat.say("Just continue like this, roll the die, and when you want to stop, just tell me.")
             } else {
-                furhat.say("You know how to roll a die. That's nothing to be proud of. Continue rolling the die and tell me when you want to stop.")
+                furhat.say("You're not rolling the die properly. Make sure it hits the playing surface and rolls. Try rolling the die again. Tell me when you want to stop.")
             }
         }
 
@@ -61,7 +61,7 @@ val DieGame: State = state(Parent) {
         if (users.current.polite) {
             furhat.say("Alright, just pick up and roll the die! I would keep my fingers crossed for you. Unfortunately, I don't have any.")
         } else {
-            furhat.say("Rolling a die is about as basic as breathing. Let's see if you can handle something that simple. Roll the die.")
+            furhat.say("Just roll the die already, I don't have all day.")
         }
 
         if (useVirtualDie) {
@@ -192,7 +192,7 @@ val DieGame: State = state(Parent) {
 val PlayerLost: State = state(Parent) {
     onEntry {
         if (users.current.polite) {
-            furhat.say("Oh no! We lost! I hope that you are okay even though this didn't go your way. Let's continue.", abort = true)
+            furhat.say("Oh no! We lost! Luck wasn't on our side this time. Unlucky. Let's continue.", abort = true)
         } else {
             furhat.say("I guess this game was too hard for you. You're not so smart. Moving on.", abort = true)
         }
@@ -205,7 +205,7 @@ val PlayerWon: State = state(Parent) {
         if (users.current.polite) {
             furhat.say("13! You won! Congratulations! Your die rolling technique is phenomenal. I'll put that on the scoreboard. Let's continue.", abort = true)
         } else {
-            furhat.say("Okay we're done now. You won because you were lucky. Let's move on.", abort = true)
+            furhat.say("Okay you're done now. You won because you were lucky. Let's move on.", abort = true)
         }
         goto(ButtonGameInstructions)
     }
@@ -219,9 +219,6 @@ val PlayerEndEarly: State = state(Parent) {
             furhat.say("You had nothing to lose. Why did you stop? I don't understand you. Let's move on.", abort = true)
         }
         furhat.say("You were ${dieGameGoal-users.current.dieSum} away from ${users.current.dieSum}. I'll put that on the scoreboard.")
-        if (!users.current.polite) {
-            furhat.say("At the bottom.")
-        }
         goto(ButtonGameInstructions)
     }
 }

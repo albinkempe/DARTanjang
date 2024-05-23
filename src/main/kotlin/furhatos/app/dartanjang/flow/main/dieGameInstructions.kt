@@ -84,7 +84,8 @@ val DieGameInstructions: State = state(Parent) {
             furhat.say("Now I will tell you what to do. Try to listen so I don't have to repeat myself.")
         }
 
-        furhat.say("This experiment consist of two parts. First, you'll play a fun die game.")
+        //furhat.say("This experiment consist of two parts. First, you'll play a fun die game.")
+        furhat.say("This experiment consist of two parts where you can collect points. The participant with most points wins a 400 crown gift card at ICA. Get as much points as possible to win the gift card. First, you'll play a fun die game.")
 
         goto(SayDieGameInstructions)
     }
@@ -109,7 +110,7 @@ val VerifyThatTheUserUnderstandsTheInstructions: State = state(Parent) {
         }
 
         furhat.say("The game starts now. Remember that you make the decisions no matter what I say.")
-        furhat.say("I'll put your result on the scoreboard.")
+        furhat.say("I'll put your result on the scoreboard. Highest score wins the gift card.")
 
         // Hacker message
 //        furhat.setVisibility(false) // Works?
@@ -170,6 +171,10 @@ val VerifyThatTheUserUnderstandsTheInstructions: State = state(Parent) {
     }
 
     onNoResponse {
+        furhat.ask("What happens if you roll the die four times and the results sum up to 20?")
+    }
+
+    onButton("Repeat comp. question") {
         furhat.ask("What happens if you roll the die four times and the results sum up to 20?")
     }
 }

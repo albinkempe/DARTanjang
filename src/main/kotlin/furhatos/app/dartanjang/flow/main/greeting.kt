@@ -31,7 +31,7 @@ fun FlowControlRunner.userStatusPositive() {
     if (users.current.polite) {
         furhat.say("That is quite wonderful to hear. That makes me happy too!")
     } else {
-        furhat.say("Cool. We really should get going with the experiment.")
+        furhat.say("You should not brag about that. We really should get going with the experiment.")
     }
     goto(DieGameInstructions)
 }
@@ -40,14 +40,14 @@ fun FlowControlRunner.userStatusNegative() {
     if (users.current.polite) {
         furhat.say("I am so sorry to hear that. I hope you feel better soon.")
     } else {
-        furhat.say("Okay. We really should get going with the experiment.")
+        furhat.say("Get over it and move on. We really should get going with the experiment.")
     }
     goto(DieGameInstructions)
 }
 
 fun FlowControlRunner.userStatusUnknown() {
     if (users.current.polite) {
-        furhat.say("I see. I'm excited to start the experiment!")
+        furhat.say("I hear you. I appreciate you letting me know. I'm excited to start the experiment!")
     } else {
         furhat.say("Okay. We really should get going with the experiment.")
     }
@@ -72,8 +72,8 @@ val Greeting: State = state(Parent) {
             furhat.say("Hello there, nice to meet you! My name is Dartanjang.")
             furhat.ask("How are you feeling today?")
         } else {
-            furhat.say("Hi. I'm Dartanjang.")
-            furhat.ask("How are you?")
+            furhat.say("Okay. Let's start. I'm Dartanjang.")
+            furhat.ask("Is something wrong with you? How are you feeling?")
         }
     }
 
