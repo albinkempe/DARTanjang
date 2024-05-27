@@ -8,28 +8,18 @@ import furhatos.nlu.common.Yes
 
 val Ready: State = state(Parent) {
     onEntry {
-        furhat.ask("Would you like to start the experiment?")
+        println("Experiment is ready. Press Start to start the experiment.")
     }
 
-    onResponse<Yes> {
-        goto(Greeting)
-    }
-
-    onResponse<StartExperiment> {
-        goto(Greeting)
-    }
-
-    onResponse<No> {
-        furhat.say("Okay.")
-        furhat.listen(timeout = 120000)
-    }
-
-    onResponse {
-        furhat.listen(timeout = 120000)
-    }
-
-    onNoResponse {
-        furhat.listen(timeout = 120000)
+    onButton("Start", color = Color.Green) {
+        when {
+            users.hasAny() -> {
+                furhat.setVisibility(true)
+                furhat.attend(users.random)
+                goto(Greeting)
+            }
+            else -> goto(Idle)
+        }
     }
 }
 

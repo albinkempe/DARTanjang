@@ -26,7 +26,8 @@ class RollDie: Intent() {
 
 class CashOut: Intent() {
     override fun getExamples(lang: Language): List<String> {
-        return listOf("Freeze",
+        return listOf("Cash out",
+            "I want to cash out",
             "I'm out",
             "I do not want to press again",
             "I am finished",
@@ -36,7 +37,7 @@ class CashOut: Intent() {
             "I don't want to continue",
             "I want to end the game",
             "I want to end the experiment",
-            "I want the gift card",
+            "I want the money",
             "I'm a coward")
     }
 }

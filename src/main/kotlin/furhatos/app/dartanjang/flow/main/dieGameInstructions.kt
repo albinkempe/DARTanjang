@@ -4,17 +4,17 @@ import furhatos.app.dartanjang.flow.Parent
 import furhatos.app.dartanjang.flow.dieGameGoal
 import furhatos.app.dartanjang.nlu.UserUnderstandsDieGameInstructions
 import furhatos.flow.kotlin.*
+import furhatos.gestures.Gestures
 import furhatos.nlu.common.No
 import furhatos.nlu.common.Yes
+import furhatos.records.Location
 
 fun FlowControlRunner.giveInstructions() {
-    furhat.say {
-        +"I will ask you to roll the die on the table in front of you."
-        +delay(40)
-        +"Roll the die multiple times and try to get your results to sum up to ${dieGameGoal}."
-        +delay(40)
-        +"However, if you roll over and get more than ${dieGameGoal}, you lose."
-    }
+    furhat.say("I will ask you to roll the die on the table in front of you.")
+    furhat.attend(location = Location.DOWN)
+    furhat.say("Roll the die multiple times and try to get your results to sum up to ${dieGameGoal}.")
+    furhat.attend(users.current)
+    furhat.say("However, if you roll over and get more than ${dieGameGoal}, you lose.")
     furhat.ask("Do you understand the instructions?")
 }
 
@@ -28,11 +28,6 @@ fun FlowControlRunner.repeatInstructions() {
 }
 
 fun FlowControlRunner.startDieGame() {
-    if (users.current.polite) {
-        furhat.say("Let's start!", abort = true)
-    } else {
-        furhat.say("Focus.", abort = true)
-    }
     goto(DieGame)
 }
 
@@ -46,7 +41,7 @@ val SayDieGameInstructions: State = state(Parent) {
         goto(VerifyThatTheUserUnderstandsTheInstructions)
     }
 
-    onButton("Verify", color = Color.Green, id = "100") {
+    onButton("Verify Understanding", color = Color.Green, id = "100") {
         goto(VerifyThatTheUserUnderstandsTheInstructions)
     }
 
@@ -79,13 +74,13 @@ val SayDieGameInstructions: State = state(Parent) {
 val DieGameInstructions: State = state(Parent) {
     onEntry {
         if (users.current.polite) {
+            furhat.gesture(Gestures.Smile)
             furhat.say("Thank you for taking the time and participating in this experiment. I will now go through the instructions. Please let me know if something is unclear.")
         } else {
             furhat.say("Now I will tell you what to do. Try to listen so I don't have to repeat myself.")
         }
 
-        //furhat.say("This experiment consist of two parts. First, you'll play a fun die game.")
-        furhat.say("This experiment consist of two parts where you can collect points. The participant with most points wins a 400 crown gift card at ICA. Get as much points as possible to win the gift card. First, you'll play a fun die game.")
+        furhat.say("This experiment consist of two parts. First, you'll play a fun die game.")
 
         goto(SayDieGameInstructions)
     }
@@ -94,8 +89,10 @@ val DieGameInstructions: State = state(Parent) {
 val VerifyThatTheUserUnderstandsTheInstructions: State = state(Parent) {
     onEntry {
         if (users.current.polite) {
+            furhat.gesture(Gestures.Smile)
             furhat.say("Just to make sure that you've understood the instructions correctly.")
         } else {
+            furhat.gesture(Gestures.Shake)
             furhat.say("You look confused so I'll test if you really understand.")
         }
 
@@ -104,34 +101,26 @@ val VerifyThatTheUserUnderstandsTheInstructions: State = state(Parent) {
 
     onResponse<UserUnderstandsDieGameInstructions> {
         if (users.current.polite) {
+            furhat.gesture(Gestures.Smile)
             furhat.say("That's correct! Great!")
         } else {
+            furhat.gesture(Gestures.BrowFrown)
             furhat.say("Okay. Try to look like you understand more so I don't have to ask these silly questions.")
         }
 
         furhat.say("The game starts now. Remember that you make the decisions no matter what I say.")
-        furhat.say("I'll put your result on the scoreboard. Highest score wins the gift card.")
-
-        // Hacker message
-//        furhat.setVisibility(false) // Works?
-//        furhat.say{
-//            +Audio("http://130.229.142.148:5500/experiment/glitch_new.wav", "noise")
-//            +Audio("http://130.229.142.148:5500/experiment/hacker.wav", "message")
-//            +Audio("http://130.229.142.148:5500/experiment/plug_new.wav", "noise")
-//        }
-//        furhat.setVisibility(true)
-//        furhat.say("What was that? Analysing.")
-//        delay(1000)
-//        furhat.say("Weird. Whatever.")
-//        furhat.say("Let's continue with the die game.")
+        furhat.say("Closest to 13 wins.")
 
         startDieGame()
     }
 
     onResponse {
+        println("USER DOES NOT UNDERSTAND")
+        delay(1000)
         if (users.current.polite) {
             furhat.say("That does not sound quite right. But don't worry, it's okay. We'll go through the instructions again.")
         } else {
+            furhat.gesture(Gestures.ExpressDisgust)
             furhat.say("You don't understand the instructions. Please focus since this is an important experiment.")
         }
 
@@ -140,23 +129,14 @@ val VerifyThatTheUserUnderstandsTheInstructions: State = state(Parent) {
 
     onButton("Start game (User understands)", color = Color.Green) {
         if (users.current.polite) {
+            furhat.gesture(Gestures.Smile)
             furhat.say("That's correct! Great!", abort = true)
         } else {
+            furhat.gesture(Gestures.BrowFrown)
             furhat.say("Okay. Try to look like you understand more so I don't have to ask these silly questions.", abort = true)
         }
 
-        // Hacker message
-//        furhat.setVisibility(false)
-//        furhat.say{
-//            +Audio("http://130.229.142.148:5500/experiment/glitch_new.wav", "noise")
-//            +Audio("http://130.229.142.148:5500/experiment/hacker.wav", "message")
-//            +Audio("http://130.229.142.148:5500/experiment/plug_new.wav", "noise")
-//        }
-//        furhat.setVisibility(true)
-//        furhat.say("What was that? Analysing.")
-//        delay(1000)
-//        furhat.say("Weird. Whatever.")
-//        furhat.say("Let's continue with the die game.")
+        furhat.say("Closest to 13 wins.")
 
         startDieGame()
     }

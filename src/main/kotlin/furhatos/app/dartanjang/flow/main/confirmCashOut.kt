@@ -8,24 +8,25 @@ import furhatos.nlu.common.Yes
 
 fun FlowControlRunner.cashOut() {
     if (users.current.polite) {
-        furhat.say("Good call. You're smart.")
+        furhat.say("Good call. You're smart. Let's cash out.")
     } else {
         furhat.say("You're such a coward.")
     }
-    furhat.say("You collected a total of ${users.current.nPress} points.")
+    furhat.say("You collected a total of ${users.current.nPress * priceMoney} Swedish crowns.")
     goto(Farewell)
 }
 
 val ConfirmCashOut: State = state(Parent) {
     onEntry {
-        furhat.ask("Are you sure you want to stop the game?")
+        furhat.attend(users.current)
+        furhat.ask("Are you sure you want to cash out?")
     }
 
     onResponse<Yes> {
         cashOut()
     }
 
-    onButton("Yes, end game") {
+    onButton("Yes, cash out") {
         cashOut()
     }
 
@@ -33,7 +34,7 @@ val ConfirmCashOut: State = state(Parent) {
         goto(ButtonGame)
     }
 
-    onButton("Don't end the game") {
+    onButton("Don't cash out") {
         goto(ButtonGame)
     }
 

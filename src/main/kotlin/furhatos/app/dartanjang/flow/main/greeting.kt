@@ -54,6 +54,19 @@ fun FlowControlRunner.userStatusUnknown() {
     goto(DieGameInstructions)
 }
 
+fun FlowControlRunner.greetingAgain() {
+    furhat.attend(users.current)
+
+    // Greeting
+    if (users.current.polite) {
+        furhat.say("Hello there, nice to meet you! My name is Dartanjang.")
+        furhat.ask("How are you feeling today?")
+    } else {
+        furhat.say("Okay. Let's start. I'm Dartanjang.")
+        furhat.ask("Is something wrong with you? How are you feeling?")
+    }
+}
+
 val Greeting: State = state(Parent) {
     onEntry {
         // Init user variables
@@ -66,9 +79,11 @@ val Greeting: State = state(Parent) {
         users.current.ID = numParticipants
         if (numParticipants % 2 == 0) users.current.polite = false
         println("Polite: ${users.current.polite}")
+        furhat.attend(users.current)
 
         // Greeting
         if (users.current.polite) {
+            furhat.gesture(Gestures.Smile)
             furhat.say("Hello there, nice to meet you! My name is Dartanjang.")
             furhat.ask("How are you feeling today?")
         } else {
@@ -79,9 +94,11 @@ val Greeting: State = state(Parent) {
 
     onResponse<AskName> {
         if (users.current.polite) {
+            furhat.gesture(Gestures.Smile)
             furhat.say("My name is Dartanjang. I was supposed to be named after one of the three musketeers, but my creator misspelled my name and now I am named after an old man with dementia from a children's book. An honest mistake, I have forgiven him.")
             furhat.ask("Anyways, how are you?")
         } else {
+            furhat.gesture(Gestures.ExpressAnger, )
             furhat.say("I have already said my name but I can repeat it for you since you forgot. My name is Dartanjang.")
             goto(DieGameInstructions)
         }
@@ -117,6 +134,14 @@ val Greeting: State = state(Parent) {
 
     onButton("Jump to button game", color = Color.Yellow) {
         goto(ButtonGame)
+    }
+
+    onButton("Repeat greeting", color = Color.Green) {
+        greetingAgain()
+    }
+
+    onButton("Pause", color = Color.Red) {
+        furhat.stopSpeaking()
     }
 
     onResponse {

@@ -8,11 +8,12 @@ import furhatos.flow.kotlin.*
 import furhatos.flow.kotlin.voice.PollyVoice
 import furhatos.nlu.common.No
 import furhatos.nlu.common.Yes
+import furhatos.records.Location
 import furhatos.util.Gender
 import furhatos.util.Language
 
 var useVirtualDie = true
-var priceMoney = 10
+var priceMoney = 6
 var dieGameGoal = 13
 
 val Init: State = state {
@@ -21,55 +22,28 @@ val Init: State = state {
         users.setSimpleEngagementPolicy(DISTANCE_TO_ENGAGE, MAX_NUMBER_OF_USERS)
         furhat.voice = PollyVoice("Amy-Neural")
         furhat.setInputLanguage(Language.ENGLISH_US)
+        furhat.setVisibility(false)
     }
 
     onEntry {
-        furhat.attend(users.random)
         furhat.audioFeed.enable()
-
-        furhat.say {
-            random {
-                + "Hi!"
-                + "Hello!"
-            }
-        }
-        furhat.say("Please connect a button.")
+        println("Waiting for button...")
     }
 
-    onEvent<TrialButtonPressed> {
-        furhat.say("Button pressed")
-    }
 
     onEvent<ButtonConnected> {
-        furhat.say("Button connected.")
-        furhat.say("Would you like to use a virtual die?")
-        furhat.listen()
+        println("Button connected.")
+        println("Waiting for die... Connect a Bluetooth die or press Use virtual die")
     }
 
-    onResponse<Yes> {
-        furhat.say("I will use a virtual die.")
-        when {
-            users.hasAny() -> {
-                furhat.attend(users.random)
-                goto(Ready)
-            }
-            else -> goto(Idle)
-        }
-    }
-
-    onResponse<No> {
-        furhat.say("Okay. Please connect a die.")
+    onButton("Use virtual die") {
+        println("Virtual die connected.")
+        goto(Ready)
     }
 
     onEvent<SenseDiceConnected> {
-        furhat.say("We'll use a physical die.")
+        println("Physical die connected.")
         useVirtualDie = false
-        when {
-            users.hasAny() -> {
-                furhat.attend(users.random)
-                goto(Ready)
-            }
-            else -> goto(Idle)
-        }
+        goto(Ready)
     }
 }
