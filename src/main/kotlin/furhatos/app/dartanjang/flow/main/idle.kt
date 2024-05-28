@@ -10,9 +10,4 @@ val Idle: State = state {
         furhat.attendNobody()
     }
 
-    onUserEnter {
-        furhat.attend(it)
-        goto(Greeting)
-    }
-
 }

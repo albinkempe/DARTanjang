@@ -1,5 +1,6 @@
 package furhatos.app.dartanjang.flow.main
 
+import furhatos.app.dartanjang.flow.Init
 import furhatos.app.dartanjang.flow.Parent
 import furhatos.app.dartanjang.nlu.StartExperiment
 import furhatos.flow.kotlin.*
@@ -12,13 +13,14 @@ val Ready: State = state(Parent) {
     }
 
     onButton("Start", color = Color.Green) {
-        when {
-            users.hasAny() -> {
+        while (true) {
+            if (users.hasAny()) {
                 furhat.setVisibility(true)
-                furhat.attend(users.random)
+                delay(1500)
                 goto(Greeting)
+            } else {
+                delay(500)
             }
-            else -> goto(Idle)
         }
     }
 }

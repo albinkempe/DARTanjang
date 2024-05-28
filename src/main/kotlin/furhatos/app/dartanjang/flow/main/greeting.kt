@@ -8,6 +8,7 @@ import furhatos.flow.kotlin.*
 import furhatos.flow.kotlin.Color
 import furhatos.gestures.Gestures
 import furhatos.nlu.common.*
+import furhatos.records.Location
 import java.io.BufferedReader
 import java.io.FileReader
 import java.io.IOException
@@ -38,8 +39,10 @@ fun FlowControlRunner.userStatusPositive() {
 
 fun FlowControlRunner.userStatusNegative() {
     if (users.current.polite) {
+        furhat.gesture(Gestures.ExpressSad)
         furhat.say("I am so sorry to hear that. I hope you feel better soon.")
     } else {
+        furhat.gesture(Gestures.ExpressDisgust)
         furhat.say("Get over it and move on. We really should get going with the experiment.")
     }
     goto(DieGameInstructions)
@@ -59,9 +62,11 @@ fun FlowControlRunner.greetingAgain() {
 
     // Greeting
     if (users.current.polite) {
+        furhat.gesture(Gestures.Smile)
         furhat.say("Hello there, nice to meet you! My name is Dartanjang.")
         furhat.ask("How are you feeling today?")
     } else {
+        furhat.gesture(Gestures.BrowFrown)
         furhat.say("Okay. Let's start. I'm Dartanjang.")
         furhat.ask("Is something wrong with you? How are you feeling?")
     }
@@ -79,16 +84,22 @@ val Greeting: State = state(Parent) {
         users.current.ID = numParticipants
         if (numParticipants % 2 == 0) users.current.polite = false
         println("Polite: ${users.current.polite}")
-        furhat.attend(users.current)
 
         // Greeting
         if (users.current.polite) {
+            furhat.attend(users.current)
             furhat.gesture(Gestures.Smile)
             furhat.say("Hello there, nice to meet you! My name is Dartanjang.")
             furhat.ask("How are you feeling today?")
         } else {
+            delay(1000)
+            furhat.attend(location = Location.UP_LEFT)
+            delay(5000)
+            furhat.attend(users.current)
+            delay(1000)
+            furhat.gesture(Gestures.BrowFrown)
             furhat.say("Okay. Let's start. I'm Dartanjang.")
-            furhat.ask("Is something wrong with you? How are you feeling?")
+            furhat.ask("Is something wrong with you? How are you?")
         }
     }
 
@@ -149,7 +160,7 @@ val Greeting: State = state(Parent) {
     }
 
     onNoResponse {
-        furhat.ask("Are you there?")
+        furhat.ask("Are you there?", timeout = 12000)
     }
 }
 

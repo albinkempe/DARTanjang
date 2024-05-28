@@ -20,7 +20,7 @@ function greenClick() {
     //button.style.backgroundColor = "";
     button.src="images/button_default.png"
     clickable = true
-  }, 3500);
+  }, 4500);
 }
 
 function redClick() {

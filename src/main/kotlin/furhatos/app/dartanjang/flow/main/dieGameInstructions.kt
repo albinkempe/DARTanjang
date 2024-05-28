@@ -22,6 +22,7 @@ fun FlowControlRunner.repeatInstructions() {
     if (users.current.polite) {
         furhat.say("I'm sorry for being unclear. That is my fault. I will repeat the instructions.", abort = true)
     } else {
+        furhat.gesture(Gestures.BrowFrown)
         furhat.say("Those were literally the easiest instructions to understand. I will say them again. Listen this time.", abort = true)
     }
     giveInstructions()
@@ -73,6 +74,7 @@ val SayDieGameInstructions: State = state(Parent) {
 
 val DieGameInstructions: State = state(Parent) {
     onEntry {
+        furhat.attend(users.current)
         if (users.current.polite) {
             furhat.gesture(Gestures.Smile)
             furhat.say("Thank you for taking the time and participating in this experiment. I will now go through the instructions. Please let me know if something is unclear.")
@@ -92,7 +94,7 @@ val VerifyThatTheUserUnderstandsTheInstructions: State = state(Parent) {
             furhat.gesture(Gestures.Smile)
             furhat.say("Just to make sure that you've understood the instructions correctly.")
         } else {
-            furhat.gesture(Gestures.Shake)
+            furhat.gesture(Gestures.BrowFrown)
             furhat.say("You look confused so I'll test if you really understand.")
         }
 

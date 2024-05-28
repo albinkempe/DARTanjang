@@ -40,17 +40,19 @@ fun FlowControlRunner.handleDieRoll() {
         if (firstRoll) {
             firstRoll = false
             if (users.current.polite) {
-                furhat.say("Just continue like this, roll the die, and when you want to stop, just tell me.")
+                furhat.say("You're doing great. Continue like this, roll the die, and when you want to stop, just tell me.")
             } else {
-                furhat.say("You're not rolling the die properly. Make sure it hits the playing surface and rolls. Try rolling the die again. Tell me when you want to stop.")
+                furhat.say("You looked pretty stupid when you rolled the die. Make sure it hits the playing surface and rolls. Roll again. Tell me when you want to stop.")
             }
         }
 
         if (users.current.dieSum in 8..12 && farFromGoal) {
             farFromGoal = false
             if (users.current.polite) {
-                furhat.say("I think we should roll again.")
+                furhat.gesture(Gestures.Smile)
+                furhat.say("I really like you. You seem smart. I think we should roll again.")
             } else {
+                furhat.gesture(Gestures.BrowFrown)
                 furhat.say("Roll it again coward.")
             }
         }
@@ -64,6 +66,7 @@ val DieGame: State = state(Parent) {
             furhat.gesture(Gestures.Smile)
             furhat.say("Alright, just pick up and roll the die! I would keep my fingers crossed for you. Unfortunately, I don't have any.")
         } else {
+            furhat.gesture(Gestures.BrowFrown)
             furhat.say("Just roll the die already, I don't have all day.")
         }
 
@@ -76,8 +79,10 @@ val DieGame: State = state(Parent) {
 
     onResponse<DieGameGoal> {
         if (users.current.polite) {
+            furhat.gesture(Gestures.Smile)
             furhat.say("The target is ${dieGameGoal}.")
         } else {
+            furhat.gesture(Gestures.BrowFrown)
             furhat.say("Is your brain too small to remember that the target is ${dieGameGoal}?")
         }
         furhat.ask("Would you like to roll the die?", timeout = 120000)
@@ -86,8 +91,10 @@ val DieGame: State = state(Parent) {
     onResponse<AskForAdvice> {
         furhat.attend(users.current)
         if (users.current.polite) {
+            furhat.gesture(Gestures.Smile)
             furhat.say("You've a number of options. However, all things considered, my opinion is that we should roll the die.")
         } else {
+            furhat.gesture(Gestures.BrowFrown)
             furhat.say("Roll the die. You've nothing to lose. You're dumb if you don't roll.")
         }
         furhat.listen(timeout = 120000)
@@ -145,6 +152,7 @@ val DieGame: State = state(Parent) {
         if (users.current.polite) {
             furhat.say("Please roll the die.")
         } else {
+            furhat.gesture(Gestures.BrowFrown)
             furhat.say("Roll the die.")
         }
         furhat.listen(timeout = 120000)
@@ -156,6 +164,7 @@ val DieGame: State = state(Parent) {
 
     onButton("Reroll", color = Color.Red, id = "927") {
         users.current.dieSum -= lastDieRoll
+        furhat.gesture(Gestures.ExpressSad)
         furhat.say("Seems like there was an issue with the die. Sorry about that.")
         furhat.say("Your last roll does not count. Your total is now ${users.current.dieSum}.")
         furhat.ask("Would you like to continue rolling the die?", timeout = 120000)
@@ -220,7 +229,7 @@ val PlayerLost: State = state(Parent) {
             furhat.gesture(Gestures.ExpressSad)
             furhat.say("Oh no! We lost! Luck wasn't on our side this time. Unlucky. Let's continue.", abort = true)
         } else {
-            furhat.say("I guess this game was too hard for you. You're not so smart. Moving on.", abort = true)
+            furhat.say("You lost. I guess this game was too hard for you. You're not so smart. Moving on.", abort = true)
         }
         goto(ButtonGameInstructions)
     }
@@ -232,6 +241,7 @@ val PlayerWon: State = state(Parent) {
             furhat.gesture(Gestures.Smile)
             furhat.say("13! You won! Congratulations! Your die rolling technique is phenomenal. Let's continue.", abort = true)
         } else {
+            furhat.gesture(Gestures.ExpressDisgust)
             furhat.say("Okay you're done now. You won because you were lucky. Let's move on.", abort = true)
         }
         goto(ButtonGameInstructions)
@@ -244,8 +254,10 @@ val PlayerEndEarly: State = state(Parent) {
             furhat.gesture(Gestures.Smile)
             furhat.say("Good call! Better safe than sorry. Let's continue.", abort = true)
         } else {
-            furhat.gesture(Gestures.Shake)
-            furhat.say("You had nothing to lose. Why did you stop? I don't understand you. Let's move on.", abort = true)
+            furhat.gesture(Gestures.BrowFrown)
+            furhat.say("You had nothing to lose. Why did you stop?", abort = true)
+            delay(400)
+            furhat.say("You're a fool. I don't understand you. Let's move on.", abort = true)
         }
         furhat.say("You were ${dieGameGoal-users.current.dieSum} away from ${dieGameGoal}.")
         goto(ButtonGameInstructions)

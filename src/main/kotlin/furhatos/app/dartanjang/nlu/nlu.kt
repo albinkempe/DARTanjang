@@ -79,7 +79,8 @@ class UserUnderstandsDieGameInstructions: Intent() {
     override fun getExamples(lang: Language): List<String> {
         return listOf("I lose",
             "It's game over",
-            "lose"
+            "lose",
+            "hi Liz"
         )
     }
 }

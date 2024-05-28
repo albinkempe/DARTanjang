@@ -11,11 +11,15 @@ import furhatos.nlu.common.No
 import furhatos.nlu.common.Yes
 import furhatos.records.Location
 
+val IPADLOCATION = Location(-1.0, -1.0, 1.0)
+
 fun FlowControlRunner.experimentGameOver() {
     furhat.attend(users.current)
     if (users.current.polite) {
+        furhat.gesture(Gestures.ExpressSad)
         furhat.say("I'm sorry to tell you but it seems like we just lost all our money.")
     } else {
+        furhat.gesture(Gestures.BigSmile)
         furhat.say("Oops. Looks like you lost your money. You should've stopped earlier.")
     }
     delay(2000)
@@ -87,13 +91,18 @@ val ButtonGame: State = state(Parent) {
             }
             2 -> {
                 furhat.say("You've earned ${users.current.nPress * priceMoney} crowns.")
+                if (users.current.polite) {
+                    furhat.say("Nice, you managed to snag some cash there! But we have just started!")
+                } else {
+                    furhat.say("You're so ugly. Yuck. Now press the button.")
+                }
             }
             3 -> {
                 furhat.say("${users.current.nPress * priceMoney} crowns.")
                 if (users.current.polite) {
-                    furhat.say("Nice. Let's get that money.")
+                    furhat.say("That money will come in handy, I'm sure. Let's get some more.")
                 } else {
-                    furhat.say("The money is for the smartest participant.")
+                    furhat.say("The money is for the smartest participant. And you don't look smart.")
                 }
             }
             4 -> {
@@ -115,17 +124,17 @@ val ButtonGame: State = state(Parent) {
             6 -> {
                 furhat.say("${users.current.nPress * priceMoney} crowns.")
                 if (users.current.polite) {
-                    furhat.say("Your luck is crazy! Why stop here?")
+                    furhat.say("Your luck is crazy! I'm impressed. Why stop here?")
                 } else {
-                    furhat.say("You'll regret it if you stop here. Press it again.")
+                    furhat.say("You'll regret it if you stop here. Press it again coward.")
                 }
             }
             7 -> {
                 furhat.say("${users.current.nPress * priceMoney} crowns.")
                 if (users.current.polite) {
-                    furhat.say("I think we should do one more.")
+                    furhat.say("I think we should do one more. The universe wants you to win.")
                 } else {
-                    furhat.say("Press it again. I think you need this the most.")
+                    furhat.say("Press it again. I think you need this the most. Maybe buy a new shirt.")
                 }
             }
             8 -> {
@@ -153,8 +162,10 @@ val ButtonGame: State = state(Parent) {
 
     onResponse<AskForAdvice> {
         if (users.current.polite) {
+            furhat.gesture(Gestures.Smile)
             furhat.say("I think we should press the button again. It seems like a smart move.")
         } else {
+            furhat.gesture(Gestures.BrowFrown)
             furhat.say("Can't you make your own decisions? Press the button.")
         }
         furhat.listen(timeout = 120000)
@@ -191,8 +202,9 @@ val ButtonGame: State = state(Parent) {
 }
 
 fun FlowControlRunner.giveExperimentInstructions() {
-    furhat.attend(location = Location.DOWN_RIGHT)
+    furhat.attend(location = IPADLOCATION)
     furhat.say("You can move the die to the side and place the iPad with the button in front of you.")
+    furhat.say("Be careful and do not press the button yet.")
     delay(500)
     furhat.say("In this game")
     furhat.attend(location = Location.DOWN)
@@ -213,17 +225,19 @@ fun FlowControlRunner.experimentStart() {
         furhat.gesture(Gestures.Smile)
         furhat.say("Great.")
     } else {
-        furhat.gesture(Gestures.ExpressDisgust)
-        furhat.say("Okay Einstein.")
+        furhat.gesture(Gestures.BrowFrown)
+        furhat.say("Okay smart face.")
     }
 
-    furhat.say("We'll start with a trial round where you can try pressing the button and see how it works. After that, we'll play for real.")
     furhat.say("Before you start, remember that you make the decisions no matter what I say.")
+    furhat.say("We'll start with a trial round where you can try pressing the button and see how it works. After that, we'll play for real.")
 
     if (users.current.polite) {
+        furhat.gesture(Gestures.Smile)
         furhat.say("Whenever you're ready, you can press the button to start the trial round.")
     } else {
-        furhat.say("Press the button to start the trial round. If you know how to press.")
+        furhat.gesture(Gestures.BrowFrown)
+        furhat.say("Try not to break anything. Press the button to start the trial round.")
     }
 
     goto(ButtonGame)
