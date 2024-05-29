@@ -10,10 +10,8 @@ import furhatos.records.Location
 
 
 fun FlowControlRunner.giveExperimentInstructions() {
-    furhat.say("In this game")
-    furhat.attend(location = Location.DOWN)
-    furhat.say("when you press the button in front of you.")
     furhat.attend(users.current)
+    furhat.say("In this game when you press the button in front of you.")
     furhat.say("there is an eighty percent chance that you win $priceMoney Swedish crowns. Real money!")
     furhat.say {
         +"However, there is also a twenty percent risk that you lose all of the money you've earned and the experiment ends."
@@ -52,7 +50,7 @@ fun FlowControlRunner.experimentRepeatInstructions() {
         furhat.gesture(Gestures.Oh)
         furhat.say("I'm sorry for being unclear. I'll go through the instructions again.")
     } else {
-        furhat.gesture(Gestures.ExpressDisgust)
+        furhat.gesture(Gestures.BrowFrown)
         furhat.say("Okay, I'll repeat myself for you. Listen this time.")
     }
 
@@ -65,7 +63,7 @@ val ButtonGameInstructions: State = state(Parent) {
         furhat.attend(location = IPADLOCATION)
         furhat.say("You can move the die to the side and place the iPad with the button in front of you.")
         furhat.say("Be careful and do not press the button yet.")
-        delay(500)
+        delay(200)
         giveExperimentInstructions()
     }
 

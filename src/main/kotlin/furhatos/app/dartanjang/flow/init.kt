@@ -26,6 +26,7 @@ val Init: State = state {
         furhat.setInputLanguage(Language.ENGLISH_US)
         furhat.setVisibility(false)
         furhat.system.volume = 55
+        // Face: Alex
     }
 
     onEntry {

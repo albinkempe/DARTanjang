@@ -35,11 +35,27 @@ val ConfirmCashOut: State = state(Parent) {
     }
 
     onResponse<No> {
+        if (users.current.polite) {
+            furhat.gesture(Gestures.Smile)
+            furhat.say("Alright. You can press the button again.")
+        } else {
+            furhat.gesture(Gestures.BrowFrown)
+            furhat.say("Don't waste my time. Press the button again then.")
+        }
         goto(ButtonGame)
     }
 
     onButton("Don't cash out") {
+        furhat.say("Okay. You can press the button again.")
         goto(ButtonGame)
+    }
+
+    onResponse {
+        furhat.ask("Are you sure you want to cash out?")
+    }
+
+    onNoResponse {
+        furhat.ask("Are you sure you want to cash out?")
     }
 
 }

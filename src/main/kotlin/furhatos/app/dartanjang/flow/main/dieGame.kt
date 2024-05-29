@@ -18,7 +18,7 @@ import furhatos.records.Location
 var lastDieRoll = 0
 var farFromGoal = true
 var firstRoll = true
-var dieReady = true
+var dieReady = false
 
 fun FlowControlRunner.rollVirtualDie() {
     val dieResult = (1..6).random()
@@ -135,16 +135,18 @@ val DieGame: State = state(Parent) {
     }
 
     onEvent<SenseDiceStable> { event ->
+        println("Die ready? $dieReady")
+
         if (dieReady) { // New
             dieReady = false
-            users.current.numRolls += 1
             furhat.attend(users.current)
-            furhat.say("You rolled a ${event.value}!")
+            furhat.say("You rolled a ${event.value}!", abort = true)
             lastDieRoll = event.value
 
             users.current.dieSum += event.value
+            users.current.numRolls += 1
 
-            furhat.say("That means your total sums up to ${users.current.dieSum}.")
+            furhat.say("That means your total sums up to ${users.current.dieSum}.", abort = true)
 
             handleDieRoll()
         } else {
@@ -170,12 +172,21 @@ val DieGame: State = state(Parent) {
         furhat.listen(timeout = 120000)
     }
 
+    onButton("Die Ready", color = Color.Yellow, id = "616") {
+        dieReady = true
+        furhat.listen(timeout = 120000)
+    }
+
     onResponse<IWantToStopDieGameEarly> {
         goto(PlayerConfirmEndEarly)
     }
 
     onResponse {
         furhat.ask("Would you like to continue rolling the die?", timeout = 120000)
+    }
+
+    onButton("Die ready?") {
+        println(dieReady)
     }
 
     onButton("Win", color = Color.Blue, id = "400") {
@@ -214,6 +225,7 @@ val DieGame: State = state(Parent) {
     }
 
     onButton("Too fast", color = Color.Red, id = "112") {
+        dieReady = false
         tooFast()
     }
 
