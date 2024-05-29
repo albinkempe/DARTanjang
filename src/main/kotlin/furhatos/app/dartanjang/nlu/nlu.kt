@@ -6,7 +6,7 @@ import furhatos.util.Language
 
 val UserStatusPositive = SimpleIntent("I am good'", "I am fine", "I am doing just fine", "great, thanks for asking", "wonderful", "okay", "nice", "excited", "I'm great", "I feel great", "great", "good", "fine", "I am well", "I feel fantastic", "I feel wonderful")
 
-val UserStatusNegative = SimpleIntent("Not so well actually", "I had a terrible day", "I am not fine", "I feel awful", "I am sick", "I feel bad", "not good", "I'm not so well", "I'm not that well", "I feel terrible", "I'm stressed", "I feel down", "I'm a bit off")
+val UserStatusNegative = SimpleIntent("Not so well actually", "I had a terrible day", "I am not fine", "I feel awful", "I am sick", "I feel bad", "not good", "I'm not so well", "I'm not that well", "I feel terrible", "I'm stressed", "I feel down", "I'm a bit off", "I feel horrible")
 
 class RollDie: Intent() {
     override fun getExamples(lang: Language): List<String> {
@@ -71,7 +71,9 @@ class IWantToStopDieGameEarly: Intent() {
             "I'd like to stop",
             "I fold",
             "I'm out",
-            "I don't want to keep rolling"
+            "I don't want to keep rolling",
+            "I want to end",
+            "End"
         )
     }
 }
@@ -81,7 +83,8 @@ class UserUnderstandsDieGameInstructions: Intent() {
         return listOf("I lose",
             "It's game over",
             "lose",
-            "hi Liz"
+            "hi Liz",
+            "The game ends"
         )
     }
 }
@@ -112,25 +115,30 @@ class ThisIsTheRealGame: Intent() {
     override fun getExamples(lang: Language): List<String> {
         return listOf("Is this the real game?",
             "Does this count?",
-            "Are we playing for real?"
+            "Are we playing for real?",
+            "Can I earn money now?"
         )
     }
 }
 
-class SayCurrentSum: Intent() {
+class SayCurrentSum: Intent() { // Die game
     override fun getExamples(lang: Language): List<String> {
         return listOf("What is my current score?",
             "What is my sum?",
-            "What is my current sum?"
+            "What is my current sum?",
+            "What is my score?",
+            "How much have I rolled?"
         )
     }
 }
 
-class SayCurrentButtonSum: Intent() {
+class SayCurrentButtonSum: Intent() { // Button game
     override fun getExamples(lang: Language): List<String> {
         return listOf("What is my current earning?",
             "How much money do I have?",
-            "What is my sum?"
+            "What is my sum?",
+            "How much have I earned?",
+            "How much have I won?"
         )
     }
 }

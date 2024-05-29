@@ -20,7 +20,7 @@ function greenClick() {
     //button.style.backgroundColor = "";
     button.src="images/button_default.png"
     clickable = true
-  }, 4500);
+  }, 6000);
 }
 
 function redClick() {
@@ -41,7 +41,7 @@ function redClick() {
     } else {
         location.reload()
     }
-  }, 6000);
+  }, 10000);
 }
 
 function connectToSkill() {

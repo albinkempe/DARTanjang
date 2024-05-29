@@ -6,6 +6,7 @@ import furhatos.app.dartanjang.nlu.Thirteen
 import furhatos.app.dartanjang.nlu.UserUnderstandsDieGameInstructions
 import furhatos.flow.kotlin.*
 import furhatos.gestures.Gestures
+import furhatos.nlu.common.DontKnow
 import furhatos.nlu.common.No
 import furhatos.nlu.common.Yes
 import furhatos.records.Location
@@ -16,6 +17,7 @@ fun FlowControlRunner.giveInstructions() {
     furhat.say("Roll the die multiple times and try to get your results to sum up to ${dieGameGoal}.")
     furhat.attend(users.current)
     furhat.say("However, if you roll over and get more than ${dieGameGoal}, you lose.")
+    furhat.say("Pause between each roll and I will keep you updated on your progress.") // New
     furhat.ask("Do you understand the instructions?")
 }
 
@@ -30,6 +32,13 @@ fun FlowControlRunner.repeatInstructions() {
 }
 
 fun FlowControlRunner.startDieGame() {
+    if (users.current.polite) {
+        furhat.gesture(Gestures.Smile)
+        furhat.say("Alright, just pick up and roll the die! I would keep my fingers crossed for you. Unfortunately, I don't have any.")
+    } else {
+        furhat.gesture(Gestures.BrowFrown)
+        furhat.say("Just roll the die already, I don't have all day.")
+    }
     goto(DieGame)
 }
 
@@ -49,6 +58,10 @@ val SayDieGameInstructions: State = state(Parent) {
 
     // Repeat Instructions
     onResponse<No> {
+        repeatInstructions()
+    }
+
+    onResponse<DontKnow> {
         repeatInstructions()
     }
 
@@ -125,6 +138,17 @@ val VerifyThatTheUserUnderstandsTheInstructions: State = state(Parent) {
         furhat.say("Closest to 13 wins.")
 
         startDieGame()
+    }
+
+    onResponse<DontKnow> {
+        if (users.current.polite) {
+            furhat.gesture(Gestures.Smile)
+            furhat.say("Don't worry, it's okay. We'll go through the instructions again.")
+        } else {
+            furhat.gesture(Gestures.ExpressDisgust)
+            furhat.say("I see. This is difficult for you. I'll tell you the instructions again. Focus.")
+        }
+        giveInstructions()
     }
 
     onResponse {

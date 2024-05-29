@@ -26,7 +26,7 @@ object ButtonConnector {
                 val connections = Collections.synchronizedSet<Connection?>(LinkedHashSet())
                 webSocket("/ws") {
                     val thisConnection = Connection(this)
-                    println("Adding connection $thisConnection")
+                    println("Adding button connection $thisConnection")
                     connections += thisConnection
                     try {
                         while (true) {
@@ -39,7 +39,6 @@ object ButtonConnector {
                                     if (command == "event") {
                                         when (arg1) {
                                             "ButtonConnected" -> {
-                                                println("Button connected")
                                                 EventSystem.send(ButtonConnected())
                                             }
                                             "ButtonPressed" -> {

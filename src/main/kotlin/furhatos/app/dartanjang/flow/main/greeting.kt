@@ -78,6 +78,7 @@ val Greeting: State = state(Parent) {
         users.current.tmb = 0
         users.current.nPress = 0
         users.current.dieSum = 0
+        users.current.numRolls = 0
 
         // Equal number of polite and rude runs
         val numParticipants = getNumParticipants()

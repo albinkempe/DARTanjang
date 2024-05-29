@@ -8,3 +8,4 @@ var User.polite: Boolean by NullSafeUserDataDelegate { true }
 var User.nPress: Int by NullSafeUserDataDelegate { 0 }
 var User.dieSum: Int by NullSafeUserDataDelegate { 0 }
 var User.ID: Int by NullSafeUserDataDelegate { 0 }
+var User.numRolls: Int by NullSafeUserDataDelegate { 0 }

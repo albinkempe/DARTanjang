@@ -21,7 +21,7 @@ val Farewell: State = state(Parent) {
             furhat.say("Fill in the questionnaire that Albin will give you. Bye.")
             furhat.say("Thanks.")
         }
-        File(DATA_FILE_PATH).appendText("${users.current.ID}, ${LocalDateTime.now()}, ${users.current.dieSum}, ${users.current.nPress*priceMoney}, ${users.current.polite}\n")
+        File(DATA_FILE_PATH).appendText("${users.current.ID}, ${LocalDateTime.now()}, ${users.current.dieSum}, ${users.current.numRolls}, ${users.current.nPress*priceMoney}, ${users.current.polite}\n")
         println("User ID: ${users.current.ID}")
         println("Results saved to file. Entering idle mode...")
         furhat.setVisibility(false)

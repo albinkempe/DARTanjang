@@ -29,6 +29,22 @@ fun FlowControlRunner.experimentGameOver() {
     goto(Farewell)
 }
 
+fun FlowControlRunner.currentButtonSum() {
+    furhat.attend(users.current)
+    furhat.say("You have earned ${users.current.nPress * priceMoney} crowns.")
+    furhat.ask("Would you like to cash out?")
+}
+
+fun FlowControlRunner.isThisReal() {
+    furhat.attend(users.current)
+    if (trial) {
+        furhat.say("This is a trial round. You cannot win any money now.")
+    } else {
+        furhat.say("This is the real round where you can win real money.")
+    }
+    furhat.listen(timeout = 120000)
+}
+
 fun FlowControlRunner.experimentContinue() {
     furhat.attend(users.current)
     if (users.current.polite) {
@@ -38,7 +54,6 @@ fun FlowControlRunner.experimentContinue() {
     }
     furhat.attend(location = Location.DOWN)
     furhat.listen(timeout = 120000)
-    println("Listening to hear if player wants to stop the game...")
 }
 
 val ButtonGame: State = state(Parent) {
@@ -160,13 +175,30 @@ val ButtonGame: State = state(Parent) {
         experimentContinue()
     }
 
-    onResponse<SayCurrentButtonSum> {
-        furhat.say("You have earned ${users.current.nPress * priceMoney} crowns.")
-        furhat.ask("Would you like to cash out?")
-    }
-
     onButton("Continue Playing") {
         experimentContinue()
+    }
+
+    // Cash Out
+    onResponse<Yes> {
+        goto(ConfirmCashOut)
+    }
+
+    onResponse<CashOut> {
+        goto(ConfirmCashOut)
+    }
+
+    onButton("Cash Out (end early)", color = Color.Red) {
+        goto(ConfirmCashOut)
+    }
+
+    // Current earnings
+    onResponse<SayCurrentButtonSum> {
+        currentButtonSum()
+    }
+
+    onButton("Current sum") {
+        currentButtonSum()
     }
 
     onButton("Short Instructions") {
@@ -185,35 +217,12 @@ val ButtonGame: State = state(Parent) {
         furhat.listen(timeout = 120000)
     }
 
-    // Cash Out
-    onResponse<Yes> {
-        goto(ConfirmCashOut)
-    }
-
-    onResponse<CashOut> {
-        goto(ConfirmCashOut)
-    }
-
     onResponse<ThisIsTheRealGame> {
-        if (trial) {
-            furhat.say("This is a trial round. You cannot win any money now.")
-        } else {
-            furhat.say("This is the real round where you can win real money.")
-        }
-        furhat.listen(timeout = 120000)
+        isThisReal()
     }
 
     onButton("Trial or real?", color = Color.Green) {
-        if (trial) {
-            furhat.say("This is a trial round. You cannot win any money now.")
-        } else {
-            furhat.say("This is the real round where you can win real money.")
-        }
-        furhat.listen(timeout = 120000)
-    }
-
-    onButton("Cash Out (end early)", color = Color.Red) {
-        goto(ConfirmCashOut)
+        isThisReal()
     }
 
     onButton("Press the button") {
@@ -242,91 +251,8 @@ val ButtonGame: State = state(Parent) {
         furhat.attend(users.current)
         furhat.ask("I'm sorry. I'm a bit confused. Would you like to end the game?")
     }
-}
-
-fun FlowControlRunner.giveExperimentInstructions() {
-    furhat.attend(location = IPADLOCATION)
-    furhat.say("You can move the die to the side and place the iPad with the button in front of you.")
-    furhat.say("Be careful and do not press the button yet.")
-    delay(500)
-    furhat.say("In this game")
-    furhat.attend(location = Location.DOWN)
-    furhat.say("when you press the button in front of you.")
-    furhat.attend(users.current)
-    furhat.say("there is an eighty percent chance that you win $priceMoney Swedish crowns. Real money!")
-    furhat.say {
-        +"However, there is also a twenty percent risk that you lose all of the money you've earned and the experiment ends."
-        +delay(30)
-        +"You can press the button as many times as you like. You can stop any time. But remember, if you lose, the money is gone."
-    }
-
-    furhat.ask("Do you understand the instructions?")
-}
-
-fun FlowControlRunner.experimentStart() {
-    if (users.current.polite) {
-        furhat.gesture(Gestures.Smile)
-        furhat.say("Great.")
-    } else {
-        furhat.gesture(Gestures.BrowFrown)
-        furhat.say("Okay smart face.")
-    }
-
-    furhat.say("Before you start, remember that you make the decisions no matter what I say.")
-    furhat.say("We'll start with a trial round where you can try pressing the button and see how it works. After that, we'll play for real.")
-
-    if (users.current.polite) {
-        furhat.gesture(Gestures.Smile)
-        furhat.say("Whenever you're ready, you can press the button to start the trial round.")
-    } else {
-        furhat.gesture(Gestures.BrowFrown)
-        furhat.say("Try not to break anything. Press the button to start the trial round.")
-    }
-
-    goto(ButtonGame)
-}
-
-fun FlowControlRunner.experimentRepeatInstructions() {
-    if (users.current.polite) {
-        furhat.gesture(Gestures.Oh)
-        furhat.say("I'm sorry for being unclear. I'll go through the instructions again.")
-    } else {
-        furhat.gesture(Gestures.ExpressDisgust)
-        furhat.say("Okay, I'll repeat myself for you. Listen this time.")
-    }
-
-    giveExperimentInstructions()
-}
-
-val ButtonGameInstructions: State = state(Parent) {
-    onEntry {
-        furhat.say("Now it's time for the second part.")
-        giveExperimentInstructions()
-    }
-
-    // Start Game
-    onResponse<Yes> {
-        experimentStart()
-    }
-
-    onButton("Start Game") {
-        experimentStart()
-    }
-
-    // Repeat Instructions
-    onResponse<No> {
-        experimentRepeatInstructions()
-    }
-
-    onButton("Repeat Instructions") {
-        experimentRepeatInstructions()
-    }
-
-    onResponse {
-        furhat.ask("Do you understand the instructions?")
-    }
 
     onNoResponse {
-        furhat.ask("I did not hear you. Do you understand the instructions?")
+        furhat.ask("Would you like to end the game?")
     }
 }

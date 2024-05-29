@@ -26,7 +26,7 @@ object DieConnector {
                 val connections = Collections.synchronizedSet<Connection?>(LinkedHashSet())
                 webSocket("/ws") {
                     val thisConnection = Connection(this)
-                    println("Adding connection $thisConnection")
+                    println("Adding die connection $thisConnection")
                     connections += thisConnection
                     EventSystem.send(SenseDiceConnected())
                     try {
