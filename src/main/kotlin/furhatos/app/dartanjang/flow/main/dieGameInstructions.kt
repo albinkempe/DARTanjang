@@ -2,6 +2,7 @@ package furhatos.app.dartanjang.flow.main
 
 import furhatos.app.dartanjang.flow.Parent
 import furhatos.app.dartanjang.flow.dieGameGoal
+import furhatos.app.dartanjang.nlu.Thirteen
 import furhatos.app.dartanjang.nlu.UserUnderstandsDieGameInstructions
 import furhatos.flow.kotlin.*
 import furhatos.gestures.Gestures
@@ -49,6 +50,16 @@ val SayDieGameInstructions: State = state(Parent) {
     // Repeat Instructions
     onResponse<No> {
         repeatInstructions()
+    }
+
+    onResponse<Thirteen> {
+        furhat.say("Try to reach thirteen. one three.")
+        furhat.ask("Do you understand the instructions?")
+    }
+
+    onButton("13?", id = "039") {
+        furhat.say("Try to reach thirteen. one three.")
+        furhat.ask("Do you understand the instructions?")
     }
 
     onButton("Repeat instructions", id = "003") {

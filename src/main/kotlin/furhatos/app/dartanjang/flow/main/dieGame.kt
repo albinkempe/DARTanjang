@@ -6,6 +6,7 @@ import furhatos.app.dartanjang.flow.useVirtualDie
 import furhatos.app.dartanjang.nlu.AskForAdvice
 import furhatos.app.dartanjang.nlu.DieGameGoal
 import furhatos.app.dartanjang.nlu.IWantToStopDieGameEarly
+import furhatos.app.dartanjang.nlu.SayCurrentSum
 import furhatos.app.dartanjang.utils.SenseDiceRolling
 import furhatos.app.dartanjang.utils.SenseDiceStable
 import furhatos.flow.kotlin.*
@@ -100,6 +101,18 @@ val DieGame: State = state(Parent) {
         furhat.listen(timeout = 120000)
     }
 
+    onResponse<SayCurrentSum> {
+        furhat.attend(users.current)
+        furhat.say("Your total is ${users.current.dieSum}.")
+        furhat.ask("Would you like to roll the die?", timeout = 120000)
+    }
+
+    onButton("Current sum", color = Color.Blue, id = "428") {
+        furhat.attend(users.current)
+        furhat.say("Your total is ${users.current.dieSum}.")
+        furhat.ask("Would you like to roll the die?", timeout = 120000)
+    }
+
     onEvent<SenseDiceRolling> {
         furhat.attend(location = Location.DOWN)
     }
@@ -149,20 +162,24 @@ val DieGame: State = state(Parent) {
     }
 
     onButton("Say Roll the die", color = Color.Green, id = "381") {
+        furhat.attend(users.current)
         if (users.current.polite) {
             furhat.say("Please roll the die.")
         } else {
             furhat.gesture(Gestures.BrowFrown)
             furhat.say("Roll the die.")
         }
+        furhat.attend(location = Location.DOWN)
         furhat.listen(timeout = 120000)
     }
 
     onButton("End Early", color = Color.Red, id = "613") {
+        furhat.attend(users.current)
         goto(PlayerEndEarly)
     }
 
     onButton("Reroll", color = Color.Red, id = "927") {
+        furhat.attend(users.current)
         users.current.dieSum -= lastDieRoll
         furhat.gesture(Gestures.ExpressSad)
         furhat.say("Seems like there was an issue with the die. Sorry about that.")
@@ -171,6 +188,7 @@ val DieGame: State = state(Parent) {
     }
 
     onButton("1", color = Color.Yellow) {
+        furhat.attend(users.current)
         furhat.say("You rolled a 1!")
         lastDieRoll = 1
         users.current.dieSum += 1
@@ -179,6 +197,7 @@ val DieGame: State = state(Parent) {
     }
 
     onButton("2", color = Color.Yellow) {
+        furhat.attend(users.current)
         furhat.say("You rolled a 2!")
         lastDieRoll = 2
         users.current.dieSum += 2
@@ -187,6 +206,7 @@ val DieGame: State = state(Parent) {
     }
 
     onButton("3", color = Color.Yellow) {
+        furhat.attend(users.current)
         furhat.say("You rolled a 3!")
         lastDieRoll = 3
         users.current.dieSum += 3
@@ -195,6 +215,7 @@ val DieGame: State = state(Parent) {
     }
 
     onButton("4", color = Color.Yellow) {
+        furhat.attend(users.current)
         furhat.say("You rolled a 4!")
         lastDieRoll = 4
         users.current.dieSum += 4
@@ -203,6 +224,7 @@ val DieGame: State = state(Parent) {
     }
 
     onButton("5", color = Color.Yellow) {
+        furhat.attend(users.current)
         furhat.say("You rolled a 5!")
         lastDieRoll = 5
         users.current.dieSum += 5
@@ -211,6 +233,7 @@ val DieGame: State = state(Parent) {
     }
 
     onButton("6", color = Color.Yellow) {
+        furhat.attend(users.current)
         furhat.say("You rolled a 6!")
         lastDieRoll = 6
         users.current.dieSum += 6

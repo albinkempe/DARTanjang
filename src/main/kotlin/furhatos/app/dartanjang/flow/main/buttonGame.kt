@@ -4,6 +4,8 @@ import furhatos.app.dartanjang.flow.Parent
 import furhatos.app.dartanjang.flow.priceMoney
 import furhatos.app.dartanjang.nlu.AskForAdvice
 import furhatos.app.dartanjang.nlu.CashOut
+import furhatos.app.dartanjang.nlu.SayCurrentButtonSum
+import furhatos.app.dartanjang.nlu.ThisIsTheRealGame
 import furhatos.app.dartanjang.utils.*
 import furhatos.flow.kotlin.*
 import furhatos.gestures.Gestures
@@ -12,6 +14,7 @@ import furhatos.nlu.common.Yes
 import furhatos.records.Location
 
 val IPADLOCATION = Location(-1.0, -1.0, 1.0)
+var trial = true
 
 fun FlowControlRunner.experimentGameOver() {
     furhat.attend(users.current)
@@ -60,9 +63,9 @@ val ButtonGame: State = state(Parent) {
             }
         } else if (users.current.nPress == 3) {
             if (users.current.polite) {
-                furhat.say("You would have ${priceMoney * 3} Swedish crowns! You have some crazy luck. Let's see if it holds up in the real game. Let's press it a few more times.")
+                furhat.say("You would have ${priceMoney * 3} Swedish crowns! You have some crazy luck. Let's see if it holds up in the real game. Let's press it a few more times until you lose.")
             } else {
-                furhat.say("You would have ${priceMoney * 3} Swedish crowns if this was the real game. Press it a few more times.")
+                furhat.say("You would have ${priceMoney * 3} Swedish crowns if this was the real game. Press it a few more times until you lose.")
             }
         }
 
@@ -71,12 +74,13 @@ val ButtonGame: State = state(Parent) {
 
     onEvent<TrialGameOver> {
         furhat.attend(users.current)
+        users.current.nPress = 0
+        trial = false
         if (users.current.polite) {
             furhat.say("The trial round is over. Now it's time for the real game where you can win real money. Whenever you're ready, press the button again. Good luck.")
         } else {
             furhat.say("The trial round is over. Now it's time for the real game where you can win real money. Try to be smart. Press the button.")
         }
-        users.current.nPress = 0
     }
 
     onEvent<ButtonPressed> {
@@ -156,8 +160,18 @@ val ButtonGame: State = state(Parent) {
         experimentContinue()
     }
 
+    onResponse<SayCurrentButtonSum> {
+        furhat.say("You have earned ${users.current.nPress * priceMoney} crowns.")
+        furhat.ask("Would you like to cash out?")
+    }
+
     onButton("Continue Playing") {
         experimentContinue()
+    }
+
+    onButton("Short Instructions") {
+        furhat.say("When you press the button there is an 80% chance that you win ${priceMoney}. There is an 20% risk that you lose all the money you've earned and the experiment ends.")
+        furhat.listen(timeout = 120000)
     }
 
     onResponse<AskForAdvice> {
@@ -180,8 +194,37 @@ val ButtonGame: State = state(Parent) {
         goto(ConfirmCashOut)
     }
 
-    onButton("Cash Out - End Game", color = Color.Red) {
+    onResponse<ThisIsTheRealGame> {
+        if (trial) {
+            furhat.say("This is a trial round. You cannot win any money now.")
+        } else {
+            furhat.say("This is the real round where you can win real money.")
+        }
+        furhat.listen(timeout = 120000)
+    }
+
+    onButton("Trial or real?", color = Color.Green) {
+        if (trial) {
+            furhat.say("This is a trial round. You cannot win any money now.")
+        } else {
+            furhat.say("This is the real round where you can win real money.")
+        }
+        furhat.listen(timeout = 120000)
+    }
+
+    onButton("Cash Out (end early)", color = Color.Red) {
         goto(ConfirmCashOut)
+    }
+
+    onButton("Press the button") {
+        if (users.current.polite) {
+            furhat.gesture(Gestures.Smile)
+            furhat.say("I think we should press the button again. It seems like a smart move.")
+        } else {
+            furhat.gesture(Gestures.BrowFrown)
+            furhat.say("Press the button coward.")
+        }
+        furhat.listen(timeout = 120000)
     }
 
     // Game Over

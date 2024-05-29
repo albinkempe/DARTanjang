@@ -1,7 +1,6 @@
 package furhatos.app.dartanjang.flow
 
 import furhatos.app.dartanjang.flow.main.*
-import furhatos.app.dartanjang.nlu.RepeatPrize
 import furhatos.flow.kotlin.*
 import furhatos.nlu.common.No
 

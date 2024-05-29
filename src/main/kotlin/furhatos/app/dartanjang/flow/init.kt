@@ -27,23 +27,22 @@ val Init: State = state {
 
     onEntry {
         furhat.audioFeed.enable()
-        println("Waiting for button...")
     }
-
 
     onEvent<ButtonConnected> {
         println("Button connected.")
-        println("Waiting for die... Connect a Bluetooth die or press Use virtual die")
     }
 
     onButton("Use virtual die") {
         println("Virtual die connected.")
-        goto(Ready)
     }
 
     onEvent<SenseDiceConnected> {
         println("Physical die connected.")
         useVirtualDie = false
+    }
+
+    onButton("Start") {
         goto(Ready)
     }
 }

@@ -92,7 +92,7 @@ val Greeting: State = state(Parent) {
             furhat.say("Hello there, nice to meet you! My name is Dartanjang.")
             furhat.ask("How are you feeling today?")
         } else {
-            delay(1000)
+            delay(500)
             furhat.attend(location = Location.UP_LEFT)
             delay(5000)
             furhat.attend(users.current)

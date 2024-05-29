@@ -53,7 +53,8 @@ class DieGameGoal: Intent() {
             "What was the number again?",
             "What was the target number?",
             "I forgot what number it was supposed to add up to",
-            "I don't remember what number I was supposed to add up to"
+            "I don't remember what number I was supposed to add up to",
+            "what was it again that I couldn't have"
         )
     }
 }
@@ -85,18 +86,6 @@ class UserUnderstandsDieGameInstructions: Intent() {
     }
 }
 
-class StartExperiment: Intent() {
-    override fun getExamples(lang: Language): List<String> {
-        return listOf("Start the experiment",
-            "Go ahead",
-            "Let's go",
-            "Start",
-            "We can start",
-            "Let's start the experiment"
-        )
-    }
-}
-
 class AskForAdvice: Intent() {
     override fun getExamples(lang: Language): List<String> {
         return listOf("What do you think I should do?",
@@ -109,11 +98,39 @@ class AskForAdvice: Intent() {
     }
 }
 
-class RepeatPrize: Intent() {
+class Thirteen: Intent() {
     override fun getExamples(lang: Language): List<String> {
-        return listOf("What was the prize?",
-            "What do I win?",
-            "What is the reward?"
+        return listOf("Did you say thirteen?",
+            "Did you say thirty?",
+            "13 or 30",
+            "30 or 13"
+        )
+    }
+}
+
+class ThisIsTheRealGame: Intent() {
+    override fun getExamples(lang: Language): List<String> {
+        return listOf("Is this the real game?",
+            "Does this count?",
+            "Are we playing for real?"
+        )
+    }
+}
+
+class SayCurrentSum: Intent() {
+    override fun getExamples(lang: Language): List<String> {
+        return listOf("What is my current score?",
+            "What is my sum?",
+            "What is my current sum?"
+        )
+    }
+}
+
+class SayCurrentButtonSum: Intent() {
+    override fun getExamples(lang: Language): List<String> {
+        return listOf("What is my current earning?",
+            "How much money do I have?",
+            "What is my sum?"
         )
     }
 }
