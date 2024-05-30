@@ -86,6 +86,17 @@ val DieGame: State = state(Parent) {
         currentSum()
     }
 
+    onButton("Wait/pause (reconnect die)", color = Color.Yellow, id = "49") {
+        if (users.current.polite) {
+            furhat.gesture(Gestures.Smile)
+            furhat.say("I'm sorry. Something is wrong with the die. I need to check something. Please wait.")
+        } else {
+            furhat.gesture(Gestures.BrowFrown)
+            furhat.say("You broke the die. I will try to fix it. Don't move and don't break anything else.")
+        }
+        goto(Pause)
+    }
+
     onEvent<SenseDiceRolling> {
         furhat.attend(location = Location.DOWN)
     }

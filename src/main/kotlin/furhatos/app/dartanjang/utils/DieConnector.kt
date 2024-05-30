@@ -18,7 +18,7 @@ object DieConnector {
         embeddedServer(Netty, port = 5432) {
             install(WebSockets) {
                 pingPeriod = Duration.ofSeconds(60)
-                timeout = Duration.ofSeconds(800)
+                timeout = Duration.ofSeconds(600)
                 maxFrameSize = Long.MAX_VALUE
                 masking = false
             }

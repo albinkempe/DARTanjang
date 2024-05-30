@@ -285,11 +285,14 @@ class GoDice {
 	 * Attempts to reconnect to the device incase of disconnect
 	 */
 	async attemptReconnect() {
+		console.log("Attempting to reconnect...")
 		if (this.bluetoothDevice) {
 			// This object's device exists
 			if (this.bluetoothDevice.gatt.connected) {
+				console.log("Already connected.")
 				console.debug(this.GlobalDeviceId + "'s Bluetooth device is already connected")
 			} else {
+				console.log("Reconnecting...")
 				await this.connectDeviceAndCacheCharacteristics()
 			}
 		}
@@ -340,6 +343,7 @@ class GoDice {
 		if (!this.GoDiceService) {
 			return Promise.reject(new Error('No Cube characteristic selected yet.'));
 		}
+		this.attemptReconnect()
 		return this.GoDiceService.getCharacteristic('6e400002-b5a3-f393-e0a9-e50e24dcca9e')
 			.then(controlPoint => {
 				console.debug("messageArray", messageArray);
