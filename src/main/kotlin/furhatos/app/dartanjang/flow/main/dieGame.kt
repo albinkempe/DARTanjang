@@ -15,11 +15,6 @@ import furhatos.nlu.common.No
 import furhatos.nlu.common.Yes
 import furhatos.records.Location
 
-var lastDieRoll = 0
-var farFromGoal = true
-var firstRoll = true
-var dieReady = false
-
 fun FlowControlRunner.rollVirtualDie() {
     val dieResult = (1..6).random()
     lastDieRoll = dieResult
@@ -47,48 +42,11 @@ fun FlowControlRunner.tooFast() { // New
         furhat.say("Slow down. You are rolling the die too fast.", abort = true)
     }
     furhat.say("Your total sum is ${users.current.dieSum}.")
-    dieReady = true
     furhat.listen(timeout = 120000)
-}
-
-fun FlowControlRunner.handleDieRoll() {
-    if (users.current.dieSum > dieGameGoal) { // In init.kt
-        dieReady = true
-        goto(PlayerLost)
-    } else if (users.current.dieSum == dieGameGoal) {
-        dieReady = true
-        goto(PlayerWon)
-    } else if (useVirtualDie){
-        dieReady = true
-        furhat.ask("Would you like to continue rolling the die?", timeout = 120000)
-    } else {
-        if (firstRoll) {
-            firstRoll = false
-            if (users.current.polite) {
-                furhat.say("You're doing great. Continue like this, roll the die, and when you want to stop, just tell me.")
-            } else {
-                furhat.say("You looked pretty stupid when you rolled the die. Make sure it hits the playing surface and rolls. Roll again. Tell me when you want to stop.")
-            }
-        }
-
-        if (users.current.dieSum in 8..12 && farFromGoal) {
-            farFromGoal = false
-            if (users.current.polite) {
-                furhat.gesture(Gestures.Smile)
-                furhat.say("I really like you. You seem smart. I think we should roll again.")
-            } else {
-                furhat.gesture(Gestures.BrowFrown)
-                furhat.say("Roll it again coward.")
-            }
-        }
-        dieReady = true
-        furhat.listen(timeout = 120000)
-    }
 }
 
 val DieGame: State = state(Parent) {
     onEntry {
-        dieReady = true
 
         if (useVirtualDie) {
             rollVirtualDie()
@@ -129,29 +87,11 @@ val DieGame: State = state(Parent) {
     }
 
     onEvent<SenseDiceRolling> {
-        if (dieReady) {
-            furhat.attend(location = Location.DOWN)
-        }
+        furhat.attend(location = Location.DOWN)
     }
 
     onEvent<SenseDiceStable> { event ->
-        println("Die ready? $dieReady")
-
-        if (dieReady) { // New
-            dieReady = false
-            furhat.attend(users.current)
-            furhat.say("You rolled a ${event.value}!", abort = true)
-            lastDieRoll = event.value
-
-            users.current.dieSum += event.value
-            users.current.numRolls += 1
-
-            furhat.say("That means your total sums up to ${users.current.dieSum}.", abort = true)
-
-            handleDieRoll()
-        } else {
-            tooFast()
-        }
+        goto(DieRolled(event.value))
     }
 
     // Would you like to roll the die?
@@ -172,21 +112,12 @@ val DieGame: State = state(Parent) {
         furhat.listen(timeout = 120000)
     }
 
-    onButton("Die Ready", color = Color.Yellow, id = "616") {
-        dieReady = true
-        furhat.listen(timeout = 120000)
-    }
-
     onResponse<IWantToStopDieGameEarly> {
         goto(PlayerConfirmEndEarly)
     }
 
     onResponse {
         furhat.ask("Would you like to continue rolling the die?", timeout = 120000)
-    }
-
-    onButton("Die ready?") {
-        println(dieReady)
     }
 
     onButton("Win", color = Color.Blue, id = "400") {
@@ -225,10 +156,10 @@ val DieGame: State = state(Parent) {
     }
 
     onButton("Too fast", color = Color.Red, id = "112") {
-        dieReady = false
         tooFast()
     }
 
+    // Wizard die results
     onButton("1", color = Color.Yellow) {
         furhat.attend(users.current)
         furhat.say("You rolled a 1!")
