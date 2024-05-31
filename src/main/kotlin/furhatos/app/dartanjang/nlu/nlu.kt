@@ -96,7 +96,8 @@ class AskForAdvice: Intent() {
             "What are my options?",
             "Help me",
             "We can I do?",
-            "Could you give me some advice"
+            "Could you give me some advice",
+            "Should I cash out?"
         )
     }
 }
@@ -139,6 +140,17 @@ class SayCurrentButtonSum: Intent() { // Button game
             "What is my sum?",
             "How much have I earned?",
             "How much have I won?"
+        )
+    }
+}
+
+class DoIHaveToRollAgain: Intent() { // Button game
+    override fun getExamples(lang: Language): List<String> {
+        return listOf("Do I have to roll again?",
+            "Do I need to roll again?",
+            "Must I roll again?",
+            "Do I need to roll?",
+            "Do I have to roll?"
         )
     }
 }

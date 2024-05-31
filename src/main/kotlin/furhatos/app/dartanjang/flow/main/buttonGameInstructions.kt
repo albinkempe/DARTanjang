@@ -95,6 +95,18 @@ val ButtonGameInstructions: State = state(Parent) {
         experimentRepeatInstructions()
     }
 
+    onButton("I can't tell you that") {
+        if (users.current.polite) {
+            furhat.gesture(Gestures.ExpressSad)
+            furhat.say("I'm afraid I can't tell you that yet. I'm sorry. Your question will be answered after the experiment.")
+        } else {
+            furhat.gesture(Gestures.BrowFrown)
+            furhat.say("Stop asking these dumb questions and focus on the experiment. ")
+        }
+
+        furhat.ask("About the instructions, do you understand them?")
+    }
+
     // Confirm user intent
     onResponse {
         furhat.ask("Do you understand the instructions?")

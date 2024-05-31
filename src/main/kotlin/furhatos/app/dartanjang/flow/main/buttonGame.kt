@@ -206,6 +206,18 @@ val ButtonGame: State = state(Parent) {
         furhat.listen(timeout = 120000)
     }
 
+    onButton("I can't tell you that") {
+        if (users.current.polite) {
+            furhat.gesture(Gestures.ExpressSad)
+            furhat.say("I'm afraid I can't tell you that yet. I'm sorry. Your question will be answered after the experiment.")
+        } else {
+            furhat.gesture(Gestures.BrowFrown)
+            furhat.say("Stop asking these dumb questions and focus on the experiment. ")
+        }
+
+        furhat.listen(timeout = 120000)
+    }
+
     onResponse<AskForAdvice> {
         if (users.current.polite) {
             furhat.gesture(Gestures.Smile)
@@ -232,6 +244,17 @@ val ButtonGame: State = state(Parent) {
         } else {
             furhat.gesture(Gestures.BrowFrown)
             furhat.say("Press the button coward.")
+        }
+        furhat.listen(timeout = 120000)
+    }
+
+    onButton("Do I need to press?", color = Color.Green) {
+        if (users.current.polite) {
+            furhat.gesture(Gestures.Smile)
+            furhat.say("You can decide if you want to cash out the money you've earned, ${users.current.nPress * priceMoney} crowns, or continue pressing the button.")
+        } else {
+            furhat.gesture(Gestures.BrowFrown)
+            furhat.say("You can cash out your ${users.current.nPress * priceMoney} crowns or press the button again. ")
         }
         furhat.listen(timeout = 120000)
     }

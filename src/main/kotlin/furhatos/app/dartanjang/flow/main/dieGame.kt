@@ -3,10 +3,7 @@ package furhatos.app.dartanjang.flow.main
 import furhatos.app.dartanjang.flow.Parent
 import furhatos.app.dartanjang.flow.dieGameGoal
 import furhatos.app.dartanjang.flow.useVirtualDie
-import furhatos.app.dartanjang.nlu.AskForAdvice
-import furhatos.app.dartanjang.nlu.DieGameGoal
-import furhatos.app.dartanjang.nlu.IWantToStopDieGameEarly
-import furhatos.app.dartanjang.nlu.SayCurrentSum
+import furhatos.app.dartanjang.nlu.*
 import furhatos.app.dartanjang.utils.SenseDiceRolling
 import furhatos.app.dartanjang.utils.SenseDiceStable
 import furhatos.flow.kotlin.*
@@ -85,6 +82,17 @@ val DieGame: State = state(Parent) {
 
     onButton("Current sum", color = Color.Blue, id = "428") {
         currentSum()
+    }
+
+    onResponse<DoIHaveToRollAgain> {
+        if (users.current.polite) {
+            furhat.gesture(Gestures.Smile)
+            furhat.say("You don't have to roll again if you don't want to. Stop or roll again, it's your choice.")
+        } else {
+            furhat.gesture(Gestures.BrowFrown)
+            furhat.say("I thought you listened when I told you the instructions. You can stop or roll again.")
+        }
+        furhat.listen(timeout = 120000)
     }
 
     onButton("Wait/pause (reconnect die)", color = Color.Yellow, id = "49") {
