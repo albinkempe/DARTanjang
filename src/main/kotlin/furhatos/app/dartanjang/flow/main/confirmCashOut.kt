@@ -22,7 +22,6 @@ fun FlowControlRunner.cashOut() {
 val ConfirmCashOut: State = state(Parent) {
     onEntry {
         furhat.attend(users.current)
-        furhat.gesture(Gestures.Thoughtful)
         furhat.ask("Are you sure you want to cash out?")
     }
 

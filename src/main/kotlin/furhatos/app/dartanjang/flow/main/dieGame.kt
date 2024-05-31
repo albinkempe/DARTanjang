@@ -53,6 +53,7 @@ val DieGame: State = state(Parent) {
         }
 
         furhat.attend(location = Location.DOWN)
+        furhat.listen(timeout = 120000)
     }
 
     onResponse<DieGameGoal> {
