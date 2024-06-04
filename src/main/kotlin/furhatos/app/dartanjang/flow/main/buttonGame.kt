@@ -262,11 +262,13 @@ val ButtonGame: State = state(Parent) {
     // Game Over
     onEvent<GameOver> {
         furhat.attend(users.current)
+        users.current.nPress += 1
         experimentGameOver()
     }
 
     onButton("Game Over", color = Color.Red) {
         furhat.attend(users.current)
+        users.current.nPress += 1
         experimentGameOver()
     }
 
