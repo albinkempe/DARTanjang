@@ -15,6 +15,7 @@ import furhatos.records.Location
 
 val IPADLOCATION = Location(-1.0, -1.0, 1.0)
 var trial = true
+var backupNPress = 0
 
 fun FlowControlRunner.experimentGameOver() {
     furhat.attend(users.current)
@@ -101,7 +102,12 @@ val ButtonGame: State = state(Parent) {
     onEvent<ButtonPressed> {
         furhat.attend(users.current)
         furhat.stopListening()
+        if (users.current.nPress != backupNPress) { // Fail-safe if furhat loses the participant
+            users.current.nPress = backupNPress
+            println("Money restored")
+        }
         users.current.nPress += 1
+        backupNPress = users.current.nPress
         when (users.current.nPress) {
             1 -> {
                 furhat.say("You've earned a total of ${users.current.nPress * priceMoney} crowns.")
