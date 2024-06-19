@@ -84,7 +84,8 @@ class UserUnderstandsDieGameInstructions: Intent() {
             "It's game over",
             "lose",
             "hi Liz",
-            "The game ends"
+            "The game ends",
+            "loose"
         )
     }
 }
