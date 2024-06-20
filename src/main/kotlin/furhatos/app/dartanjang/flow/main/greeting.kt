@@ -83,7 +83,8 @@ val Greeting: State = state(Parent) {
         // Equal number of polite and rude runs
         val numParticipants = getNumParticipants()
         users.current.ID = numParticipants
-        if (numParticipants % 2 == 0) users.current.polite = false
+        //if (numParticipants % 2 == 0) users.current.polite = false
+        users.current.polite = true
         println("Polite: ${users.current.polite}")
 
         // Greeting
