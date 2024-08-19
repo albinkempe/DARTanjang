@@ -18,7 +18,7 @@ object DieConnector {
         embeddedServer(Netty, port = 5432) {
             install(WebSockets) {
                 pingPeriod = Duration.ofSeconds(60)
-                timeout = Duration.ofSeconds(15)
+                timeout = Duration.ofSeconds(600)
                 maxFrameSize = Long.MAX_VALUE
                 masking = false
             }
@@ -26,7 +26,7 @@ object DieConnector {
                 val connections = Collections.synchronizedSet<Connection?>(LinkedHashSet())
                 webSocket("/ws") {
                     val thisConnection = Connection(this)
-                    println("Adding connection $thisConnection")
+                    println("Adding die connection $thisConnection")
                     connections += thisConnection
                     EventSystem.send(SenseDiceConnected())
                     try {

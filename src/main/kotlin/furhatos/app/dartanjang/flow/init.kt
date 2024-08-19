@@ -15,6 +15,8 @@ import furhatos.util.Language
 var useVirtualDie = true
 var priceMoney = 6
 var dieGameGoal = 13
+var buttonConn = false
+var dieConn = false
 
 val Init: State = state {
     init {
@@ -23,6 +25,8 @@ val Init: State = state {
         furhat.voice = PollyVoice("Amy-Neural")
         furhat.setInputLanguage(Language.ENGLISH_US)
         furhat.setVisibility(false)
+        furhat.system.volume = 55
+        // Face: Alex
     }
 
     onEntry {
@@ -30,19 +34,32 @@ val Init: State = state {
     }
 
     onEvent<ButtonConnected> {
+        buttonConn = true
         println("Button connected.")
     }
 
     onButton("Use virtual die") {
         println("Virtual die connected.")
+        dieConn = true
     }
 
     onEvent<SenseDiceConnected> {
         println("Physical die connected.")
         useVirtualDie = false
+        dieConn = true
     }
 
-    onButton("Start") {
-        goto(Ready)
+    onButton("Start", color = Color.Yellow) {
+        if (dieConn && buttonConn) {
+            println("Starting experiment")
+            goto(Ready)
+        } else {
+            if (!dieConn) {
+                println("Please connect a die")
+            }
+            if (!buttonConn) {
+                println("Please connect a button")
+            }
+        }
     }
 }
